@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 5.0.2, 2023-11-01T01:18:51. -->
+<!-- Written by QtCreator 5.0.2, 2023-11-01T01:26:50. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -157,6 +157,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/madona.jpg</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/madona.jpg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/madona.jpg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{f8dc3abe-68d4-42a1-b2cd-2aca427238d4}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\d3bla\Documents\Cours\Image\Puech\Projet-Edition-Du-Genre\Code\Genre\madona.jpg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -174,6 +175,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/shape_predictor_68_face_landmarks.dat</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/shape_predictor_68_face_landmarks.dat</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/shape_predictor_68_face_landmarks.dat</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{f8dc3abe-68d4-42a1-b2cd-2aca427238d4}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\d3bla\Documents\Cours\Image\Puech\Projet-Edition-Du-Genre\Code\Genre\shape_predictor_68_face_landmarks.dat</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -281,6 +283,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpeg</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpeg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpeg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{f8dc3abe-68d4-42a1-b2cd-2aca427238d4}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\d3bla\Documents\Cours\Image\Puech\Projet-Edition-Du-Genre\Code\Genre\trump.jpeg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -298,6 +301,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpg</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{f8dc3abe-68d4-42a1-b2cd-2aca427238d4}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\d3bla\Documents\Cours\Image\Puech\Projet-Edition-Du-Genre\Code\Genre\trump.jpg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -315,6 +319,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/madona.jpeg</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/madona.jpeg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/madona.jpeg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{f8dc3abe-68d4-42a1-b2cd-2aca427238d4}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\d3bla\Documents\Cours\Image\Puech\Projet-Edition-Du-Genre\Code\Genre\madona.jpeg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
