@@ -2,9 +2,11 @@
 import sys
 import os
 import random
+import phonon
 import cv2
 import numpy as np
-import phonon
+import dlib
+import matplotlib
 
 #QT lib
 import PyQt6.QtCore
@@ -21,6 +23,11 @@ from Swap import *
 from CNN import *
 from Morph import *
 from Analyse import *
+
+_Swap = Swap()
+_CNN = CNN()
+_Morph = Morph()
+_Analyse = Analyse()
 
 class MainApplication(QMainWindow):
     def __init__(self):
@@ -119,7 +126,7 @@ class MainApplication(QMainWindow):
         self.morph_placeholder = QLabel(self.morph_tab)
         self.morph_placeholder.setAutoFillBackground(True)
         self.morph_pal = self.morph_placeholder.palette()
-        self.morph_pal.setColor(QPalette.ColorRole.Window, QColor(255, 50, 50))
+        self.morph_pal.setColor(QPalette.ColorRole.Window, QColor(255, 0, 0))
         self.morph_placeholder.setPalette(self.morph_pal)
 
         self.morph_placeholder.setAcceptDrops(True)
@@ -214,10 +221,17 @@ class MainApplication(QMainWindow):
         self.swap_gauche_open_button.clicked.connect(lambda: self.open_image(option=3))
         self.swap_droite_open_button.clicked.connect(lambda: self.open_image(option=4))
         self.swap_save_button.clicked.connect(lambda: self.save_image(option=3))
+        self.swap_swap_button.clicked.connect(self.Operation_swap)
+
+        #////////////////////////////////////////////////////////////////////////////////
         self.morph_open_button.clicked.connect(lambda: self.open_image(option=1))
         self.morph_save_button.clicked.connect(lambda: self.save_image(option=1))
+
+        #////////////////////////////////////////////////////////////////////////////////
         self.cnn_open_button.clicked.connect(lambda: self.open_image(option=2))
         self.cnn_save_button.clicked.connect(lambda: self.save_image(option=2))
+
+        #////////////////////////////////////////////////////////////////////////////////
 
         #Help dans texte.txt
         #Parcourt du fichier et on écrit directement dans la fenetre
@@ -281,20 +295,26 @@ class MainApplication(QMainWindow):
         if file_name:
             print("Open file " + file_name + "\n")
             image = cv2.imread(str(file_name))
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             if image is not None:
                 if option == 1:
                     placeholder = self.morph_placeholder
+                    print("Set Portrait" + str(file_name))
                 elif option == 2:
                     placeholder = self.cnn_placeholder
+                    print("Set Portrait" + str(file_name))
                 elif option == 3:
                     placeholder = self.swap_placeholder
+                    _Swap.set_body(str(file_name))
+                    print("Set Body" + str(file_name))
                 elif option == 4:
                     placeholder = self.inter_swap_placeholder
+                    _Swap.set_face(str(file_name))
+                    print("Set Face" + str(file_name))
                 if placeholder:
                     empty_pixmap = QPixmap(placeholder.size())
                     empty_pixmap.fill(Qt.GlobalColor.white)
                     placeholder.setPixmap(empty_pixmap)
-                    placeholder.setAutoFillBackground(False)
                     size = placeholder.size()
                     image_height, image_width, _ = image.shape
                     ratio = min(size.height() / image_height, size.width() / image_width)
@@ -336,6 +356,23 @@ class MainApplication(QMainWindow):
             else:
                 print("No active tab found")
 
+    def Operation_swap(self):
+        _Swap.swap()
+        res = _Swap.get_result()
+        res = cv2.cvtColor(res, cv2.COLOR_BGR2RGB)
+
+        q_image = QImage(res.data, res.shape[1], res.shape[0], res.shape[1] * 3, QImage.Format.Format_RGB888)
+        pixmap = QPixmap.fromImage(q_image)
+        placeholder = self.res_swap_placeholder
+        if placeholder:
+            empty_pixmap = QPixmap(placeholder.size())
+            empty_pixmap.fill(Qt.GlobalColor.white)
+            placeholder.setPixmap(empty_pixmap)
+            pixmap = pixmap.scaled(placeholder.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+            placeholder.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            placeholder.setPixmap(pixmap)
+        else:
+            print("No placeholder found for the swap operation")
 
 def main():
     app = QApplication(sys.argv)

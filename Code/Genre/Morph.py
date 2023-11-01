@@ -1,5 +1,8 @@
 # This Python file uses the following encoding: utf-8
-
+import cv2
+import numpy as np
+import dlib
+import matplotlib
 
 class Morph:
     def __init__(self):
