@@ -122,9 +122,21 @@ class MainApplication(QMainWindow):
         #Morph Onglet
         #-------------------------------------------------------------------------
 
-        self.morph_open_button = QPushButton("Open", self.morph_tab)
+        self.morph_gauche_open_button = QPushButton("Open Source", self.morph_tab)
+        self.morph_droite_open_button = QPushButton("Open Cible", self.morph_tab)
         self.morph_save_button = QPushButton("Save", self.morph_tab)
-        self.morph_morph_button = QPushButton("Morph", self.morph_tab)
+        self.morph_morph_button = QPushButton("Median Morph", self.morph_tab)
+
+        self.morph_slider = QSlider(Qt.Orientation.Horizontal)
+        self.morph_slider.setRange(0, 100)
+        self.morph_slider.setFixedWidth(int(self.morph_tab.width()))
+        self.morph_slider.setFixedHeight(int(self.morph_tab.height()))
+        self.morph_slider.valueChanged.connect(self.slider_value_changed)
+
+        self.morph_label = QLabel("Morph Value: 0")
+        layout = QVBoxLayout()
+        layout.addWidget(self.morph_slider)
+        layout.addWidget(self.morph_label)
 
         self.morph_placeholder = QLabel(self.morph_tab)
         self.morph_placeholder.setAutoFillBackground(True)
@@ -133,8 +145,18 @@ class MainApplication(QMainWindow):
         self.morph_placeholder.setPalette(self.morph_pal)
 
         self.morph_placeholder.setAcceptDrops(True)
-        self.morph_placeholder.dragEnterEvent = lambda event: self.dragEnterEvent_morph(event)
-        self.morph_placeholder.dropEvent = lambda event: self.dropEvent_morph(event)
+        self.morph_placeholder.dragEnterEvent = lambda event: self.dragEnterEvent_morph_gauche(event)
+        self.morph_placeholder.dropEvent = lambda event: self.dropEvent_morph_gauche(event)
+
+        self.inter_morph_placeholder = QLabel(self.morph_tab)
+        self.inter_morph_placeholder.setAutoFillBackground(True)
+        self.inter_morph_pal = self.inter_morph_placeholder.palette()
+        self.inter_morph_pal.setColor(QPalette.ColorRole.Window, QColor(255, 0, 0))
+        self.inter_morph_placeholder.setPalette(self.inter_morph_pal)
+
+        self.inter_morph_placeholder.setAcceptDrops(True)
+        self.inter_morph_placeholder.dragEnterEvent = lambda event: self.dragEnterEvent_morph_doite(event)
+        self.inter_morph_placeholder.dropEvent = lambda event: self.dropEvent_morph_droite(event)
 
         self.res_morph_placeholder = QLabel(self.morph_tab)
         self.res_morph_placeholder.setAutoFillBackground(True)
@@ -144,16 +166,20 @@ class MainApplication(QMainWindow):
 
         placeholders_layout = QHBoxLayout()
         placeholders_layout.addWidget(self.morph_placeholder)
+        placeholders_layout.addWidget(self.inter_morph_placeholder)
         placeholders_layout.addWidget(self.res_morph_placeholder)
 
         buttons_layout = QVBoxLayout()
-        buttons_layout.addWidget(self.morph_open_button)
+        buttons_layout.addWidget(self.morph_gauche_open_button)
+        buttons_layout.addWidget(self.morph_droite_open_button)
         buttons_layout.addWidget(self.morph_save_button)
         buttons_layout.addWidget(self.morph_morph_button)
+        buttons_layout.addLayout(layout)
 
-        num_placeholders = 2
-        button_width = int(self.morph_tab.width() * 2 / num_placeholders)
-        self.morph_open_button.setFixedSize(button_width, self.morph_open_button.height())
+        num_placeholders = 3
+        button_width = int(self.morph_tab.width() * 3 / num_placeholders)
+        self.morph_gauche_open_button.setFixedSize(button_width, self.morph_gauche_open_button.height())
+        self.morph_droite_open_button.setFixedSize(button_width, self.morph_droite_open_button.height())
         self.morph_save_button.setFixedSize(button_width, self.morph_save_button.height())
         self.morph_morph_button.setFixedSize(button_width, self.morph_morph_button.height())
 
@@ -261,12 +287,15 @@ class MainApplication(QMainWindow):
         self.swap_swap_button.clicked.connect(self.Operation_swap)
 
         #////////////////////////////////////////////////////////////////////////////////
-        self.morph_open_button.clicked.connect(lambda: self.open_image(option=1))
+        self.morph_gauche_open_button.clicked.connect(lambda: self.open_image(option=1))
+        self.morph_droite_open_button.clicked.connect(lambda: self.open_image(option=2))
         self.morph_save_button.clicked.connect(lambda: self.save_image(option=1))
+        self.morph_morph_button.clicked.connect(self.Operator_linear_morph)
 
         #////////////////////////////////////////////////////////////////////////////////
-        self.cnn_open_button.clicked.connect(lambda: self.open_image(option=2))
+        self.cnn_open_button.clicked.connect(lambda: self.open_image(option=5))
         self.cnn_save_button.clicked.connect(lambda: self.save_image(option=2))
+        self.cnn_cnn_button.clicked.connect(self.Operation_cnn)
 
         #////////////////////////////////////////////////////////////////////////////////
         self.analyze_next_button.clicked.connect(self.load_next_image)
@@ -295,6 +324,24 @@ class MainApplication(QMainWindow):
             file_name = url.toLocalFile()
             self.open_image(4,file_name)
 
+    def dragEnterEvent_morph_gauche(self, event):
+        if event.mimeData().hasUrls():
+            event.acceptProposedAction()
+
+    def dropEvent_morph_gauche(self, event):
+        for url in event.mimeData().urls():
+            file_name = url.toLocalFile()
+            self.open_image(1,file_name)
+
+    def dragEnterEvent_morph_doite(self, event):
+        if event.mimeData().hasUrls():
+            event.acceptProposedAction()
+
+    def dropEvent_morph_droite(self, event):
+        for url in event.mimeData().urls():
+            file_name = url.toLocalFile()
+            self.open_image(2,file_name)
+
     def dragEnterEvent_morph(self, event):
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
@@ -312,6 +359,12 @@ class MainApplication(QMainWindow):
         for url in event.mimeData().urls():
             file_name = url.toLocalFile()
             self.open_image(2,file_name)
+
+    def slider_value_changed(self):
+        morph_value = self.morph_slider.value() / 100.0
+        self.morph_label.setText(f"Morph Value: {morph_value}")
+        _Morph.set_power(float(morph_value))
+        self.Operator_linear_morph()
 
     def load_help_text(self, help_tab):
         try:
@@ -372,10 +425,12 @@ class MainApplication(QMainWindow):
             if image is not None:
                 if option == 1:
                     placeholder = self.morph_placeholder
-                    print("Set Portrait" + str(file_name))
+                    _Morph.set_source(str(file_name))
+                    print("Set Source" + str(file_name))
                 elif option == 2:
-                    placeholder = self.cnn_placeholder
-                    print("Set Portrait" + str(file_name))
+                    placeholder = self.inter_morph_placeholder
+                    _Morph.set_target(str(file_name))
+                    print("Set Target" + str(file_name))
                 elif option == 3:
                     placeholder = self.swap_placeholder
                     _Swap.set_body(str(file_name))
@@ -384,6 +439,9 @@ class MainApplication(QMainWindow):
                     placeholder = self.inter_swap_placeholder
                     _Swap.set_face(str(file_name))
                     print("Set Face" + str(file_name))
+                elif option == 5:
+                    placeholder = self.cnn_placeholder
+                    print("Set Portrait" + str(file_name))
                 if placeholder:
                     empty_pixmap = QPixmap(placeholder.size())
                     empty_pixmap.fill(Qt.GlobalColor.white)
@@ -409,9 +467,9 @@ class MainApplication(QMainWindow):
             active_tab = self.central_widget.currentWidget()
             if active_tab:
                 if option == 1:
-                    placeholder = self.morph_placeholder
+                    placeholder = self.res_morph_placeholder
                 elif option == 2:
-                    placeholder = self.cnn_placeholder
+                    placeholder = self.res_cnn_placeholder
                 elif option == 3:
                     placeholder = self.res_swap_placeholder
                 if placeholder:
@@ -446,6 +504,34 @@ class MainApplication(QMainWindow):
             placeholder.setPixmap(pixmap)
         else:
             print("No placeholder found for the swap operation")
+
+    def Operator_linear_morph(self):
+        _Morph.linear_morph2()
+        self.Operation_morph()
+
+    def Operator_landmark_morph(self):
+        _Morph.landmark_morph()
+        self.Operation_morph()
+
+    def Operation_morph(self):
+        res = _Morph.get_result()
+        res = cv2.cvtColor(res, cv2.COLOR_BGR2RGB)
+
+        q_image = QImage(res.data, res.shape[1], res.shape[0], res.shape[1] * 3, QImage.Format.Format_RGB888)
+        pixmap = QPixmap.fromImage(q_image)
+        placeholder = self.res_morph_placeholder
+        if placeholder:
+            empty_pixmap = QPixmap(placeholder.size())
+            empty_pixmap.fill(Qt.GlobalColor.white)
+            placeholder.setPixmap(empty_pixmap)
+            pixmap = pixmap.scaled(placeholder.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+            placeholder.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            placeholder.setPixmap(pixmap)
+        else:
+            print("No placeholder found for the morph operation")
+
+    def Operation_cnn(self):
+        pass
 
 def main():
     app = QApplication(sys.argv)

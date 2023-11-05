@@ -6,4 +6,4 @@ import matplotlib
 
 class CNN:
     def __init__(self):
-        pass
+        super().__init__()
