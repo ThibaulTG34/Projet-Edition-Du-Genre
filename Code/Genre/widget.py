@@ -39,6 +39,9 @@ class MainApplication(QMainWindow):
         self.central_widget = QStackedWidget(self)
         self.setCentralWidget(self.central_widget)
 
+        self.image_files = []
+        self.current_image_index = -1
+
         self.init_tabs()
 
     def init_tabs(self):
@@ -47,7 +50,7 @@ class MainApplication(QMainWindow):
         self.swap_tab = QWidget(self)
         self.morph_tab = QWidget(self)
         self.cnn_tab = QWidget(self)
-        self.analyze_tab = QTextBrowser(self)
+        self.analyze_tab = QWidget(self)
         self.help_tab = QTextBrowser(self)
 
         self.tabs.addTab(self.swap_tab, "Swap")
@@ -206,6 +209,40 @@ class MainApplication(QMainWindow):
 
         #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+        # Analyse onglet
+        #{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+
+        self.analyze_homme_button = QPushButton("Homme", self.analyze_tab)
+        self.analyze_femme_button = QPushButton("Femme", self.analyze_tab)
+        self.analyze_next_button = QPushButton("Next", self.analyze_tab)
+
+        self.analyze_placeholder = QLabel(self.analyze_tab)
+        self.analyze_placeholder.setAutoFillBackground(True)
+        self.analyze_pal = self.analyze_placeholder.palette()
+        self.analyze_pal.setColor(QPalette.ColorRole.Window, QColor(0, 0, 255))
+        self.analyze_placeholder.setPalette(self.analyze_pal)
+
+        placeholders_layout = QHBoxLayout()
+        placeholders_layout.addWidget(self.analyze_placeholder)
+
+        buttons_layout = QHBoxLayout()
+        buttons_layout.addWidget(self.analyze_homme_button)
+        buttons_layout.addWidget(self.analyze_next_button)
+        buttons_layout.addWidget(self.analyze_femme_button)
+
+        button_width = int(self.analyze_tab.width() * 3)
+        self.analyze_homme_button.setFixedSize(button_width, self.analyze_homme_button.height())
+        self.analyze_next_button.setFixedSize(button_width, self.analyze_next_button.height())
+        self.analyze_femme_button.setFixedSize(button_width, self.analyze_femme_button.height())
+
+        self.analyze_layout = QVBoxLayout(self.analyze_tab)
+        self.analyze_layout.addLayout(placeholders_layout)
+        self.analyze_layout.addLayout(buttons_layout)
+
+        self.load_image_files("./")
+
+        #&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
         self.placeholder_dict = {}
         self.placeholder_dict[self.swap_tab] = self.swap_placeholder
         self.placeholder_dict[self.morph_tab] = self.morph_placeholder
@@ -230,6 +267,9 @@ class MainApplication(QMainWindow):
         #////////////////////////////////////////////////////////////////////////////////
         self.cnn_open_button.clicked.connect(lambda: self.open_image(option=2))
         self.cnn_save_button.clicked.connect(lambda: self.save_image(option=2))
+
+        #////////////////////////////////////////////////////////////////////////////////
+        self.analyze_next_button.clicked.connect(self.load_next_image)
 
         #////////////////////////////////////////////////////////////////////////////////
 
@@ -288,6 +328,39 @@ class MainApplication(QMainWindow):
         bytes_per_line = 3 * width
         q_image = QImage(cv_image.data, width, height, bytes_per_line, QImage.Format.Format_BGR888)
         return q_image
+
+    def load_image_files(self, directory):
+            self.image_extensions = {".png", ".jpg", ".jpeg", ".bmp", ".gif"}
+            for root, dirs, files in os.walk(directory):
+                for file in files:
+                    if any(file.lower().endswith(ext) for ext in self.image_extensions):
+                        self.image_files.append(os.path.join(root, file))
+
+    def load_image(self):
+        if 0 <= self.current_image_index < len(self.image_files):
+            file_name = self.image_files[self.current_image_index]
+            pixmap = QPixmap(file_name)
+            if not pixmap.isNull():
+                placeholder_size = self.analyze_placeholder.size()
+                placeholder_rect = self.analyze_placeholder.rect()
+
+                scaled_pixmap = pixmap.scaled(placeholder_size, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio, transformMode=Qt.TransformationMode.SmoothTransformation)
+                scaled_rect = scaled_pixmap.rect()
+
+                center_x = (placeholder_rect.width() - scaled_rect.width()) / 2
+                center_y = (placeholder_rect.height() - scaled_rect.height()) / 2
+
+                self.analyze_placeholder.setPixmap(scaled_pixmap)
+                self.analyze_placeholder.setGeometry(int(center_x - 1), int(center_y - 1), int(scaled_rect.width() - 1), int(scaled_rect.height() - 1))
+
+
+    def load_next_image(self):
+        if 0 <= self.current_image_index < len(self.image_files) - 1:
+            self.current_image_index += 1
+            self.load_image()
+        else :
+            self.current_image_index = 0
+            self.load_image()
 
     def open_image(self, option=1, name=None):
         if name is not None: file_name = name
