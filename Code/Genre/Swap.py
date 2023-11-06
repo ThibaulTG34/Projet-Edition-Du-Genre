@@ -1,18 +1,38 @@
+import os
 import cv2
 import dlib
 import numpy as np
 from matplotlib import pyplot as plt
+from scipy.stats import chi2_contingency, pearsonr
+from scipy.spatial import distance as scipy_distance
+
+#Frequences
+chi2_weight = 2
+#Geometrie positionnelle
+euclidiean_weight = 1
+#Geometrie forme
+pearson_weight = 1
+#Texture
+bhattacharyya_weight = 0.5
 
 class Swap:
     def __init__(self):
         super().__init__()
-        self.face = cv2.imread("madona.jpeg")
-        self.body = cv2.imread("trump.jpeg")
+        self.face = None
+        self.face_name = str(" ")
+        self.body = cv2.imread("./trump.jpeg")
+        self.body_name = "./trump.jpeg"
+        self.w = chi2_weight + euclidiean_weight +  pearson_weight + bhattacharyya_weight
+
+        self.fps = 15 # + vite - vite -> lecture [temps video]
+        self.num_frames = 100 # + longue - longue -> interpolation [smoothing video]
 
     def set_face(self,name):
+        self.face_name = str(name)
         self.face = cv2.imread(str(name))
 
     def set_body(self,name):
+        self.body_name = str(name)
         self.body = cv2.imread(str(name))
 
     def set_img_face(self,f):
@@ -21,6 +41,15 @@ class Swap:
     def set_img_body(self,b):
         self.body = b
 
+    def set_animation(self,name):
+        self.in_animation = str(name)
+
+    def set_frames(self, f):
+        self.num_frames = int(f)
+
+    def set_fps(self, f):
+        self.fps = int(f)
+
     def prepare_variables(self):
         self.face_gray = cv2.cvtColor(self.face, cv2.COLOR_BGR2GRAY)
         self.body_gray = cv2.cvtColor(self.body, cv2.COLOR_BGR2GRAY)
@@ -28,7 +57,7 @@ class Swap:
         self.mask = np.zeros((self.height, self.width), np.uint8)
         self.height, self.width, self.channels = self.body.shape
         self.detector = dlib.get_frontal_face_detector()
-        self.predictor = dlib.shape_predictor("./shape_predictor_68_face_landmarks.dat")
+        self.predictor = dlib.shape_predictor("./shape_predictor_81_face_landmarks.dat")
 
     def get_landmarks(self, landmarks, landmarks_points):
         for n in range(68):
@@ -165,7 +194,62 @@ class Swap:
         self.seamlessclone = cv2.seamlessClone(self.result, self.body, self.body_head_mask, self.center_face2, cv2.NORMAL_CLONE)
         self.result = self.seamlessclone
 
+    def chi2_distance(self, hist1, hist2):
+        chi2 = chi2_contingency([hist1, hist2])
+        return chi2
+
     def swap(self):
+        if self.face is None:
+            image_extensions = [".jpg", ".jpeg", ".png"]
+            predictor = dlib.shape_predictor("./shape_predictor_81_face_landmarks.dat")
+            detector = dlib.get_frontal_face_detector()
+            min_distance = float('inf')
+            closest_face = None
+            _name = str(" ")
+
+            for file_name in os.listdir("./"):
+                if file_name.lower().endswith(tuple(image_extensions)):
+                    image_path = os.path.join("./", file_name)
+                    image = cv2.imread(image_path)
+
+                    if image is not None:
+                        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                        faces = detector(gray)
+
+                        gray_reference = cv2.cvtColor(self.body, cv2.COLOR_BGR2GRAY)
+                        faces_reference = detector(gray_reference)
+
+                        if len(faces) > 0:
+                            body_landmarks = np.array([[p.x, p.y] for p in predictor(self.body, faces_reference[0]).parts()])
+                            landmarks = np.array([[p.x, p.y] for p in predictor(image, faces[0]).parts()])
+
+                            #Frequences
+                            chi2_distance = float(self.chi2_distance(body_landmarks.flatten(), landmarks.flatten()).statistic)
+                            #Geometrie
+                            euclidean_distance = float(np.linalg.norm(body_landmarks.flatten() - landmarks.flatten()))
+                            #Forme
+                            shape_correlation = float(pearsonr(body_landmarks.flatten(), landmarks.flatten()).statistic)
+                            #Texture
+                            hist1 = cv2.calcHist([self.body], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
+                            hist2 = cv2.calcHist([image], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
+                            texture_distance = cv2.compareHist(hist1, hist2, cv2.HISTCMP_BHATTACHARYYA)
+
+                            d = (chi2_weight * chi2_distance + euclidiean_weight * euclidean_distance + pearson_weight * shape_correlation + bhattacharyya_weight * texture_distance)
+
+                            distance = float(d / self.w)
+
+                            file__name, file_extension = os.path.splitext(os.path.basename(file_name))
+                            body__name, body_extension = os.path.splitext(os.path.basename(self.body_name))
+
+                            if distance < min_distance and not (file__name == body__name):
+                                min_distance = distance
+                                closest_face = image
+                                _name = image_path
+
+            self.finded_face = str(_name)
+            self.face = closest_face
+            print("Auto Selection face : " + self.finded_face)
+
         self.prepare_variables()
         self.init_landmark()
         self.init_contour()
@@ -175,6 +259,11 @@ class Swap:
         self.traitement()
         self.replace()
         self.smoothing()
+
+    def get_animation(self):
+        #file__name, file_extension = os.path.splitext(os.path.basename(str(self.body_name)))
+        #self.in_animation = str(file__name + "_anim")
+        self.animation()
 
     def get_result(self):
         return self.result
@@ -186,4 +275,20 @@ class Swap:
         else:
             res_filename = str(name)
         cv2.imwrite(str(filename), self.result)
+
+    def animation(self):
+        if self.body.shape != self.result.shape:
+            raise ValueError("Les deux images doivent avoir la même taille.")
+
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(self.in_animation, fourcc, self.fps, (self.body.shape[1], self.body.shape[0]))
+
+        for i in range(self.num_frames):
+            alpha = i / (self.num_frames - 1)
+            interpolated_image = cv2.addWeighted(self.body, 1 - alpha, self.result, alpha, 0)
+            out.write(interpolated_image)
+
+        print("Animation created in : " + self.in_animation)
+        self.out_animation = self.in_animation
+        out.release()
 

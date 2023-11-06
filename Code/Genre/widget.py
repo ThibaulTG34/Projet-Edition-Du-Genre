@@ -68,6 +68,33 @@ class MainApplication(QMainWindow):
         self.swap_droite_open_button = QPushButton("Open Cible", self.swap_tab)
         self.swap_save_button = QPushButton("Save", self.swap_tab)
         self.swap_swap_button = QPushButton("Swap", self.swap_tab)
+        self.swap_anim_button = QPushButton("Animation", self.swap_tab)
+
+        fps_layout = QVBoxLayout()
+        frames_layout = QVBoxLayout()
+        fps_layout.setSpacing(0)
+        frames_layout.setSpacing(0)
+
+        swap_fps_label = QLabel("FPS : ")
+        swap_frames_label = QLabel("Frames")
+
+        self.swap_fps_spinbox = QSpinBox()
+        self.swap_fps_spinbox.setRange(0, 120)
+        self.swap_fps_spinbox.setValue(15)
+        self.swap_fps_spinbox.setSingleStep(1)
+
+        self.swap_frames_spinbox = QSpinBox()
+        self.swap_frames_spinbox.setRange(0, 150)
+        self.swap_frames_spinbox.setValue(100)
+        self.swap_frames_spinbox.setSingleStep(1)
+
+        fps_layout.addWidget(swap_fps_label)
+        frames_layout.addWidget(swap_frames_label)
+        fps_layout.addWidget(self.swap_fps_spinbox)
+        frames_layout.addWidget(self.swap_frames_spinbox)
+
+        fps_layout.setSpacing(0)
+        frames_layout.setSpacing(0)
 
         self.swap_placeholder = QLabel(self.swap_tab)
         self.swap_placeholder.setAutoFillBackground(True)
@@ -105,6 +132,9 @@ class MainApplication(QMainWindow):
         buttons_layout.addWidget(self.swap_droite_open_button)
         buttons_layout.addWidget(self.swap_save_button)
         buttons_layout.addWidget(self.swap_swap_button)
+        buttons_layout.addWidget(self.swap_anim_button)
+        buttons_layout.addLayout(fps_layout)
+        buttons_layout.addLayout(frames_layout)
 
         num_placeholders = 3
         button_width = int(self.swap_tab.width() * 3 / num_placeholders)
@@ -112,6 +142,9 @@ class MainApplication(QMainWindow):
         self.swap_droite_open_button.setFixedSize(button_width, self.swap_droite_open_button.height())
         self.swap_save_button.setFixedSize(button_width, self.swap_save_button.height())
         self.swap_swap_button.setFixedSize(button_width, self.swap_swap_button.height())
+        self.swap_anim_button.setFixedSize(button_width, self.swap_anim_button.height())
+        self.swap_fps_spinbox.setFixedSize(button_width, self.swap_save_button.height())
+        self.swap_frames_spinbox.setFixedSize(button_width, self.swap_save_button.height())
 
         self.swap_layout = QHBoxLayout(self.swap_tab)
         self.swap_layout.addLayout(placeholders_layout)
@@ -285,6 +318,7 @@ class MainApplication(QMainWindow):
         self.swap_droite_open_button.clicked.connect(lambda: self.open_image(option=4))
         self.swap_save_button.clicked.connect(lambda: self.save_image(option=3))
         self.swap_swap_button.clicked.connect(self.Operation_swap)
+        self.swap_anim_button.clicked.connect(self.on_swap_anim_button_clicked)
 
         #////////////////////////////////////////////////////////////////////////////////
         self.morph_gauche_open_button.clicked.connect(lambda: self.open_image(option=1))
@@ -486,6 +520,24 @@ class MainApplication(QMainWindow):
                     print("No placeholder found in the active tab")
             else:
                 print("No active tab found")
+
+
+    def on_swap_anim_button_clicked(self):
+        options = 0
+
+        file_dialog = QFileDialog()
+        folder_path = file_dialog.getExistingDirectory(None, "Sélectionnez un dossier de destination")
+
+        if folder_path:
+            file_name, ok = QInputDialog.getText(self, "Nom du fichier", "Entrez le nom du fichier : ")
+
+            if ok and file_name:
+                output_filename = os.path.join(folder_path, file_name)
+                print(output_filename)
+                _Swap.set_animation(output_filename)
+                _Swap.set_fps(int(self.swap_fps_spinbox.value()))
+                _Swap.set_frames(int(self.swap_frames_spinbox.value()))
+                _Swap.get_animation()
 
     def Operation_swap(self):
         _Swap.swap()
