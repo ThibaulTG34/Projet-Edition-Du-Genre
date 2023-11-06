@@ -1,3 +1,4 @@
+import os
 import cv2
 import dlib
 import numpy as np
@@ -28,10 +29,11 @@ class Swap:
         self.mask = np.zeros((self.height, self.width), np.uint8)
         self.height, self.width, self.channels = self.body.shape
         self.detector = dlib.get_frontal_face_detector()
-        self.predictor = dlib.shape_predictor("./shape_predictor_68_face_landmarks.dat")
+        pwd = os.path.dirname(__file__)
+        self.predictor = dlib.shape_predictor(pwd + "/shape_predictor_81_face_landmarks.dat")
 
     def get_landmarks(self, landmarks, landmarks_points):
-        for n in range(68):
+        for n in range(81):
             x = landmarks.part(n).x
             y = landmarks.part(n).y
             landmarks_points.append((x, y))
