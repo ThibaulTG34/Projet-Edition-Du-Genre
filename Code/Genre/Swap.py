@@ -57,7 +57,8 @@ class Swap:
         self.mask = np.zeros((self.height, self.width), np.uint8)
         self.height, self.width, self.channels = self.body.shape
         self.detector = dlib.get_frontal_face_detector()
-        self.predictor = dlib.shape_predictor("./shape_predictor_81_face_landmarks.dat")
+        pwd = os.path.dirname(__file__)
+        self.predictor = dlib.shape_predictor(pwd+"/shape_predictor_81_face_landmarks.dat")
 
     def get_landmarks(self, landmarks, landmarks_points):
         for n in range(68):
@@ -195,21 +196,23 @@ class Swap:
         self.result = self.seamlessclone
 
     def chi2_distance(self, hist1, hist2):
-        chi2 = chi2_contingency([hist1, hist2])
+        chi2,_,_,_ = chi2_contingency([hist1, hist2])
         return chi2
 
     def swap(self):
         if self.face is None:
             image_extensions = [".jpg", ".jpeg", ".png"]
-            predictor = dlib.shape_predictor("./shape_predictor_81_face_landmarks.dat")
+            pwd = os.path.dirname(__file__)
+            predictor = dlib.shape_predictor(pwd+"/shape_predictor_81_face_landmarks.dat")
             detector = dlib.get_frontal_face_detector()
             min_distance = float('inf')
             closest_face = None
             _name = str(" ")
 
-            for file_name in os.listdir("./"):
+            for file_name in os.listdir(pwd+"/Training/male"):
+                print("--------------------------" + file_name)
                 if file_name.lower().endswith(tuple(image_extensions)):
-                    image_path = os.path.join("./", file_name)
+                    image_path = os.path.join(pwd+"/Training/male/", file_name)
                     image = cv2.imread(image_path)
 
                     if image is not None:
@@ -259,6 +262,15 @@ class Swap:
         self.traitement()
         self.replace()
         self.smoothing()
+    
+    # def FindTargetFromDATA():
+    #     min_distance = float('inf')
+    #     closest_face = None
+    #     _name = str(" ")
+        
+    #     for file in os.listdir("D:/Training/female"):
+            
+        
 
     def get_animation(self):
         #file__name, file_extension = os.path.splitext(os.path.basename(str(self.body_name)))

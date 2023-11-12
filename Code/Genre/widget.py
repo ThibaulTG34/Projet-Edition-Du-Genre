@@ -43,6 +43,8 @@ class MainApplication(QMainWindow):
         self.current_image_index = -1
 
         self.init_tabs()
+        
+        _CNN.resize()
 
     def init_tabs(self):
         self.tabs = QTabWidget(self)
@@ -448,6 +450,9 @@ class MainApplication(QMainWindow):
         else :
             self.current_image_index = 0
             self.load_image()
+        
+    # def FindTarget():
+        
 
     def open_image(self, option=1, name=None):
         if name is not None: file_name = name
