@@ -68,7 +68,8 @@ class MainApplication(QMainWindow):
         self.swap_droite_open_button = QPushButton("Open Cible", self.swap_tab)
         self.swap_save_button = QPushButton("Save", self.swap_tab)
         self.swap_swap_button = QPushButton("Swap", self.swap_tab)
-        self.swap_anim_button = QPushButton("Animation", self.swap_tab)
+        self.swap_mp4_button = QPushButton("MP4", self.swap_tab)
+        self.swap_gif_button = QPushButton("Gif", self.swap_tab)
 
         fps_layout = QVBoxLayout()
         frames_layout = QVBoxLayout()
@@ -132,7 +133,8 @@ class MainApplication(QMainWindow):
         buttons_layout.addWidget(self.swap_droite_open_button)
         buttons_layout.addWidget(self.swap_save_button)
         buttons_layout.addWidget(self.swap_swap_button)
-        buttons_layout.addWidget(self.swap_anim_button)
+        buttons_layout.addWidget(self.swap_mp4_button)
+        buttons_layout.addWidget(self.swap_gif_button)
         buttons_layout.addLayout(fps_layout)
         buttons_layout.addLayout(frames_layout)
 
@@ -142,7 +144,8 @@ class MainApplication(QMainWindow):
         self.swap_droite_open_button.setFixedSize(button_width, self.swap_droite_open_button.height())
         self.swap_save_button.setFixedSize(button_width, self.swap_save_button.height())
         self.swap_swap_button.setFixedSize(button_width, self.swap_swap_button.height())
-        self.swap_anim_button.setFixedSize(button_width, self.swap_anim_button.height())
+        self.swap_mp4_button.setFixedSize(button_width, self.swap_mp4_button.height())
+        self.swap_gif_button.setFixedSize(button_width, self.swap_gif_button.height())
         self.swap_fps_spinbox.setFixedSize(button_width, self.swap_save_button.height())
         self.swap_frames_spinbox.setFixedSize(button_width, self.swap_save_button.height())
 
@@ -318,7 +321,9 @@ class MainApplication(QMainWindow):
         self.swap_droite_open_button.clicked.connect(lambda: self.open_image(option=4))
         self.swap_save_button.clicked.connect(lambda: self.save_image(option=3))
         self.swap_swap_button.clicked.connect(self.Operation_swap)
-        self.swap_anim_button.clicked.connect(self.on_swap_anim_button_clicked)
+        self.swap_mp4_button.clicked.connect(lambda: self.on_swap_anim_button_clicked(option=1))
+        self.swap_gif_button.clicked.connect(lambda: self.on_swap_anim_button_clicked(option=2))
+
 
         #////////////////////////////////////////////////////////////////////////////////
         self.morph_gauche_open_button.clicked.connect(lambda: self.open_image(option=1))
@@ -522,7 +527,7 @@ class MainApplication(QMainWindow):
                 print("No active tab found")
 
 
-    def on_swap_anim_button_clicked(self):
+    def on_swap_anim_button_clicked(self,option=1):
         options = 0
 
         file_dialog = QFileDialog()
@@ -537,7 +542,7 @@ class MainApplication(QMainWindow):
                 _Swap.set_animation(output_filename)
                 _Swap.set_fps(int(self.swap_fps_spinbox.value()))
                 _Swap.set_frames(int(self.swap_frames_spinbox.value()))
-                _Swap.get_animation()
+                _Swap.get_animation() if option==1 else _Swap.get_gif()
 
     def Operation_swap(self):
         _Swap.swap()
@@ -583,7 +588,14 @@ class MainApplication(QMainWindow):
             print("No placeholder found for the morph operation")
 
     def Operation_cnn(self):
-        pass
+        output_directory = "results/f2m/"
+        if not os.path.exists(output_directory):
+            os.makedirs(output_directory)
+        output_directory = "results/m2f/"
+        if not os.path.exists(output_directory):
+            os.makedirs(output_directory)
+        train()
+        cnn_test()
 
 def main():
     app = QApplication(sys.argv)

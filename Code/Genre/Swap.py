@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 from scipy.stats import chi2_contingency, pearsonr
 from scipy.spatial import distance as scipy_distance
 
+import imageio
 #Frequences
 chi2_weight = 2
 #Geometrie positionnelle
@@ -265,6 +266,11 @@ class Swap:
         #self.in_animation = str(file__name + "_anim")
         self.animation()
 
+    def get_gif(self):
+        #file__name, file_extension = os.path.splitext(os.path.basename(str(self.body_name)))
+        #self.in_animation = str(file__name + "_anim")
+        self.create_animation()
+
     def get_result(self):
         return self.result
 
@@ -281,14 +287,31 @@ class Swap:
             raise ValueError("Les deux images doivent avoir la même taille.")
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out = cv2.VideoWriter(self.in_animation, fourcc, self.fps, (self.body.shape[1], self.body.shape[0]))
+        out = cv2.VideoWriter(self.in_animation + ".mp4", fourcc, self.fps, (self.body.shape[1], self.body.shape[0]))
 
         for i in range(self.num_frames):
             alpha = i / (self.num_frames - 1)
             interpolated_image = cv2.addWeighted(self.body, 1 - alpha, self.result, alpha, 0)
             out.write(interpolated_image)
 
-        print("Animation created in : " + self.in_animation)
-        self.out_animation = self.in_animation
+        print("Animation created in : " + self.in_animation + ".mp4")
+        self.out_animation = self.in_animation + ".mp4"
         out.release()
+
+    def create_animation(self):
+        if self.body.shape != self.result.shape:
+            raise ValueError("Les deux images doivent avoir la même taille.")
+
+        frames = []
+
+        for i in range(self.num_frames):
+            alpha = i / (self.num_frames - 1)
+            interpolated_image = cv2.addWeighted(self.body, 1 - alpha, self.result, alpha, 0)
+            interpolated_image = cv2.cvtColor(interpolated_image, cv2.COLOR_BGR2RGB)
+            frames.append(interpolated_image)
+
+        self.out_animation = os.path.splitext(self.in_animation)[0] + ".gif"
+        imageio.mimsave(self.out_animation, frames, fps=self.fps)
+
+        print("Animation created in : " + self.out_animation)
 
