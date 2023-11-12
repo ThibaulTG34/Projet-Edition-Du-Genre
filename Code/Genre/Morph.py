@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import dlib
 import matplotlib
+import os
 
 class Morph:
     def __init__(self):
@@ -27,7 +28,8 @@ class Morph:
         self.power = float(power)
 
     def init_landmark(self):
-        self.predictor = dlib.shape_predictor("./shape_predictor_68_face_landmarks.dat")
+        pwd = os.path.dirname(__file__)
+        self.predictor = dlib.shape_predictor(pwd+"/shape_predictor_68_face_landmarks.dat")
         self.detector = dlib.get_frontal_face_detector()
 
     def init_sources(self):
