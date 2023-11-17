@@ -22,6 +22,124 @@ from keras_contrib.layers import InstanceNormalization
 class CNN:
     def __init__(self):
         super().__init__()
+        self.start_epochs = 0
+        self.nepochs = 120
+        self.decay_epochs = 10
+        self.learning_decay = float(0.002)
+        self.size = 256
+        self.batch_size = 5
+        self.inchannel = 3
+        self.outchannel = 3
+        self.cpu = 8
+        self.gpu = False
+
+        self.mode = 0
+        self.source = None
+        self.result = None
+
+        self.fps = 15 # + vite - vite -> lecture [temps video]
+        self.num_frames = 100 # + longue - longue -> interpolation [smoothing video]
+        self.in_animation = str("test")
+
+    def set_directory(self, val):
+        v = int(max(min(int(val),1),0))
+        self.mode = v
+
+    def set_source(self, s):
+        self.source = cv2.imread(str(s))
+
+    def set_frames(self, f):
+        self.num_frames = int(f)
+
+    def set_fps(self, f):
+        self.fps = int(f)
+
+    def get_result(self):
+        return self.result
+
+    def set_animation(self,name):
+        self.in_animation = str(name)
+
+    def get_animation(self):
+        #file__name, file_extension = os.path.splitext(os.path.basename(str(self.body_name)))
+        #self.in_animation = str(file__name + "_anim")
+        self.animation()
+
+    def get_gif(self):
+        #file__name, file_extension = os.path.splitext(os.path.basename(str(self.body_name)))
+        #self.in_animation = str(file__name + "_anim")
+        self.create_animation()
+
+    def animation(self):
+        if self.source.shape != self.result.shape:
+            raise ValueError("Les deux images doivent avoir la même taille.")
+
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(self.in_animation + ".mp4", fourcc, self.fps, (self.source.shape[1], self.source.shape[0]))
+
+        for i in range(self.num_frames):
+            alpha = i / (self.num_frames - 1)
+            interpolated_image = cv2.addWeighted(self.source, 1 - alpha, self.result, alpha, 0)
+            out.write(interpolated_image)
+
+        print("Animation created in : " + self.in_animation + ".mp4")
+        self.out_animation = self.in_animation + ".mp4"
+        out.release()
+
+    def create_animation(self):
+        if self.source.shape != self.result.shape:
+            raise ValueError("Les deux images doivent avoir la même taille.")
+
+        frames = []
+
+        for i in range(self.num_frames):
+            alpha = i / (self.num_frames - 1)
+            interpolated_image = cv2.addWeighted(self.source, 1 - alpha, self.result, alpha, 0)
+            interpolated_image = cv2.cvtColor(interpolated_image, cv2.COLOR_BGR2RGB)
+            frames.append(interpolated_image)
+
+        self.out_animation = os.path.splitext(self.in_animation)[0] + ".gif"
+        imageio.mimsave(self.out_animation, frames, fps=self.fps)
+
+        print("Animation created in : " + self.out_animation)
+
+    def print_parameters(self):
+        s = ("mtf" if self.mode == 0 else "ftm")
+        print("Datasets in : " + str(s))
+        print(f"Start Epochs : {self.start_epochs}")
+        print(f"Number of Epochs : {self.nepochs}")
+        print(f"Decay Epochs : {self.decay_epochs}")
+        print(f"Learning Rate Decay : {self.learning_decay}")
+        print(f"Size : {self.size}")
+        print(f"Batch Size : {self.batch_size}")
+        print(f"Input Channels : {self.inchannel}")
+        print(f"Output Channels : {self.outchannel}")
+        print(f"Number of CPU Threads : {self.cpu}")
+        print(f"Use GPU : {self.gpu}")
+
+    def set(self, option, val):
+        if option == 0:
+            self.start_epochs = int(val)
+        elif option == 1:
+            self.nepochs = int(val)
+        elif option == 2:
+            self.decay_epochs = int(val)
+        elif option == 3:
+            self.learning_decay = float(val)
+        elif option == 4:
+            self.size = int(val)
+        elif option == 5:
+            self.batch_size = int(val)
+        elif option == 6:
+            v = int(min(max(int(val),0),3))
+            self.inchannel = int(v)
+        elif option == 7:
+            v = int(min(max(int(val),0),3))
+            self.outchannel = int(v)
+        elif option == 8:
+            self.cpu = int(val)
+        elif option == 9:
+            self.gpu = bool(val)
 
 def load_train_images(data_dir):
     images_type_A = glob.glob(data_dir + '/trainA/*.jpg')
@@ -76,7 +194,7 @@ def load_test_images(data_dir, num_images):
 
 #Save the training losses to the tensorboard logs that can be used for visualization
 def save_losses_tensorboard(callback, name, loss, batch_no):
-    summary_writer = tf.summary.create_file_writer("/data/male_female")
+    summary_writer = tf.summary.create_file_writer("./data/male_female")
 
     with summary_writer.as_default():
         tf.summary.scalar(name, loss, batch_no)
@@ -85,33 +203,58 @@ def save_losses_tensorboard(callback, name, loss, batch_no):
 
 def save_test_results(realA, realB, fakeA, fakeB, reconsA, reconsB, identityA, identityB):
     for i in range(len(realA)):
-        fig = plt.figure()
+
+        realA[i] = cv2.cvtColor(realA[i], cv2.COLOR_BGR2RGB)
+        fakeA[i] = cv2.cvtColor(fakeA[i], cv2.COLOR_BGR2RGB)
+        #reconsA[i] = cv2.cvtColor(reconsA[i], cv2.COLOR_BGR2RGB)
+        identityA[i] = cv2.cvtColor(identityA[i], cv2.COLOR_BGR2RGB)
+        realB[i] = cv2.cvtColor(realB[i], cv2.COLOR_BGR2RGB)
+        fakeB[i] = cv2.cvtColor(fakeB[i], cv2.COLOR_BGR2RGB)
+        #reconsB[i] = cv2.cvtColor(reconsB[i], cv2.COLOR_BGR2RGB)
+        identityB[i] = cv2.cvtColor(identityB[i], cv2.COLOR_BGR2RGB)
+
+        fig = plt.figure()        
+        plt.imshow(realA[i])
         plt.axis('off')
         plt.savefig("results/m2f/real_{}".format(i), bbox_inches='tight')
+        plt.close(fig)
         fig2 = plt.figure()
+        plt.imshow(fakeB[i])
         plt.axis('off')
         plt.savefig("results/m2f/fake_{}".format(i), bbox_inches='tight')
+        plt.close(fig2)
         fig3 = plt.figure()
+        plt.imshow(reconsA[i])
         plt.axis('off')
         plt.savefig("results/m2f/recons_{}".format(i, bbox_inches='tight'))
+        plt.close(fig3)
         fig4 = plt.figure()
+        plt.imshow(identityA[i])
         plt.axis('off')
         plt.savefig("results/m2f/identity_{}".format(i), bbox_inches='tight')
-        fig = plt.figure()
+        plt.close(fig4)
+
+        fig = plt.figure()            
+        plt.imshow(realB[i])
         plt.axis('off')
         plt.savefig("results/f2m/real_{}".format(i), bbox_inches='tight')
+        plt.close(fig)
         fig2 = plt.figure()
+        plt.imshow(fakeA[i])
         plt.axis('off')
         plt.savefig("results/f2m/fake_{}".format(i), bbox_inches='tight')
+        plt.close(fig2)
         fig3 = plt.figure()
+        plt.imshow(reconsB[i])
         plt.axis('off')
         plt.savefig("results/f2m/recons_{}".format(i), bbox_inches='tight')
+        plt.close(fig3)
         fig4 = plt.figure()
+        plt.imshow(identityB[i])
         plt.axis('off')
         plt.savefig("results/f2m/identity_{}".format(i), bbox_inches='tight')
-        matplotlib.pyplot.close()
+        plt.close(fig4)
 
-#Define residual block with 2 convolutional layers and a skip connection
 def resnet_block(x):
     x2 = Conv2D(filters=256, kernel_size=3, strides=1, padding="same")(x)
     x2 = InstanceNormalization(axis=1)(x2)
@@ -122,14 +265,10 @@ def resnet_block(x):
 
     return Add()([x2, x])
 
-#Define generator network with encoder-transformation-decoder style architecture
 def define_generator_network(num_resnet_blocks=9):
     input_size = (128,128,3)
-
-    #Input RGB image
     input_layer = Input(shape=input_size)
 
-    #Down-sampling using conv2d
     x = Conv2D(filters=64, kernel_size=7, strides=1, padding="same")(input_layer)
     x = InstanceNormalization(axis=1)(x)
     x = Activation("relu")(x)
@@ -142,7 +281,6 @@ def define_generator_network(num_resnet_blocks=9):
     x = InstanceNormalization(axis=1)(x)
     x = Activation("relu")(x)
 
-    #Transforming the hidden representation using the resnet blocks
     for i in range(num_resnet_blocks):
         x = resnet_block(x)
 
@@ -284,7 +422,8 @@ def train():
         num_batches = int(min(trainA.shape[0], trainB.shape[0]) / batch_size)
         print("Number of batches:{} in each epoch".format(num_batches))
 
-        for index in range(num_batches):
+        #for index in range(num_batches):
+        for index in range(50):
             print("Batch:{}".format(index))
 
             # Sample images
@@ -389,3 +528,6 @@ def cnn_test():
     identityB = genA2B.predict(testB)
 
     save_test_results(testA, testB, fakeA, fakeB, reconsA, reconsA, identityA, identityB)
+
+#train()
+#cnn_test()

@@ -1,4 +1,4 @@
 {
-    "files": ["shape_predictor_68_face_landmarks.dat","Swap.py","texte.txt","CNN.py","shape_predictor_81_face_landmarks.dat","Morph.py","trump.jpeg","trump.jpg","M1.mp3","widget.py","madona.jpeg","madona.jpg","Analyse.py"],
-    "dir": ["datasets/test/A","datasets/test/B","datasets/train/A","datasets/train/A","shape_predictor_68_face_landmarks.dat","Swap.py","texte.txt","CNN.py","shape_predictor_81_face_landmarks.dat","Morph.py","trump.jpeg","trump.jpg","M1.mp3","widget.py","madona.jpeg","madona.jpg","Analyse.py"]
+    "files": ["madona.jpg","shape_predictor_68_face_landmarks.dat","CNN.py","widget.py","Swap.py","shape_predictor_81_face_landmarks.dat","texte.txt","Analyse.py","M1.mp3","trump.jpeg","trump.jpg","madona.jpeg"],
+    "dir": ["madona.jpg","shape_predictor_68_face_landmarks.dat","CNN.py","widget.py","Swap.py","shape_predictor_81_face_landmarks.dat","texte.txt","Analyse.py","M1.mp3","trump.jpeg","trump.jpg","madona.jpeg"]
 }

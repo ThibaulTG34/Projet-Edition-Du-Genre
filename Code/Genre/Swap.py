@@ -20,13 +20,15 @@ class Swap:
     def __init__(self):
         super().__init__()
         self.face = None
-        self.face_name = str(" ")
-        self.body = cv2.imread("./trump.jpeg")
-        self.body_name = "./trump.jpeg"
-        self.w = chi2_weight + euclidiean_weight +  pearson_weight + bhattacharyya_weight
+        self.face_name = None
+        self.body = None
+        self.body_name = None
+        self.directory = str("./")
 
+        self.w = chi2_weight + euclidiean_weight +  pearson_weight + bhattacharyya_weight
         self.fps = 15 # + vite - vite -> lecture [temps video]
         self.num_frames = 100 # + longue - longue -> interpolation [smoothing video]
+        self.in_animation = str("test")
 
     def set_face(self,name):
         self.face_name = str(name)
@@ -59,7 +61,7 @@ class Swap:
         self.height, self.width, self.channels = self.body.shape
         self.detector = dlib.get_frontal_face_detector()
         pwd = os.path.dirname(__file__)
-        self.predictor = dlib.shape_predictor(pwd+"/shape_predictor_81_face_landmarks.dat")
+        self.predictor = dlib.shape_predictor("./shape_predictor_81_face_landmarks.dat")
 
     def get_landmarks(self, landmarks, landmarks_points):
         for n in range(68):
@@ -203,17 +205,16 @@ class Swap:
     def swap(self):
         if self.face is None:
             image_extensions = [".jpg", ".jpeg", ".png"]
-            pwd = os.path.dirname(__file__)
-            predictor = dlib.shape_predictor(pwd+"/shape_predictor_81_face_landmarks.dat")
+            predictor = dlib.shape_predictor("./shape_predictor_81_face_landmarks.dat")
             detector = dlib.get_frontal_face_detector()
             min_distance = float('inf')
             closest_face = None
             _name = str(" ")
 
-            for file_name in os.listdir(pwd+"/Training/male"):
+            for file_name in os.listdir(str(self.directory)):
                 print("--------------------------" + file_name)
                 if file_name.lower().endswith(tuple(image_extensions)):
-                    image_path = os.path.join(pwd+"/Training/male/", file_name)
+                    image_path = os.path.join(str(self.directory), file_name)
                     image = cv2.imread(image_path)
 
                     if image is not None:
@@ -228,7 +229,10 @@ class Swap:
                             landmarks = np.array([[p.x, p.y] for p in predictor(image, faces[0]).parts()])
 
                             #Frequences
-                            chi2_distance = float(self.chi2_distance(body_landmarks.flatten(), landmarks.flatten()).statistic)
+                            #chi2_distance = float(self.chi2_distance(body_landmarks.flatten(), landmarks.flatten()).statistic)
+                            epsilon = 1e-10  
+                            chi2_distance = sum(( (x - y) ** 2 ) / (x + y + epsilon) for x, y in zip(body_landmarks.flatten(), landmarks.flatten()))
+
                             #Geometrie
                             euclidean_distance = float(np.linalg.norm(body_landmarks.flatten() - landmarks.flatten()))
                             #Forme
@@ -270,9 +274,11 @@ class Swap:
     #     _name = str(" ")
         
     #     for file in os.listdir("D:/Training/female"):
-            
-        
 
+
+    def set_directory(self, s):
+        self.directory = str(s)
+        
     def get_animation(self):
         #file__name, file_extension = os.path.splitext(os.path.basename(str(self.body_name)))
         #self.in_animation = str(file__name + "_anim")

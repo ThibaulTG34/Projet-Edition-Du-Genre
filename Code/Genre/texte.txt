@@ -1,3 +1,49 @@
-Ceci est un texte.
-Pour faire un test.
-Ouais c'est fun.
+L'onglet "Help" , celui-ci donc , logique hein ?
+    Fournit des informations utiles sur l'utilisation de chaque fonctionnalité de l'interface.
+    Consultez ce guide pour obtenir des conseils sur la navigation et l'utilisation efficace de l'application.
+
+Onglet "Swap"
+    L'onglet "Swap" vous permet d'effectuer des opérations de transformation d'images entre deux fichiers sources.
+        Vous pouvez charger une image source dans chaque espace réservé,
+                     -définir la fréquence d'images par seconde (FPS)
+                     -le nombre de trames.
+        Utilisez les boutons pour ouvrir, enregistrer et effectuer des opérations spécifiques telles que :
+              -MTF (male to female)
+              -FTM (female to male)
+        Vous pouvez également générer des fichiers vidéo MP4 ou GIF à partir des images transformées.
+
+Onglet "Morph"
+
+    L'onglet "Morph" est dédié aux opérations de morphing sur les images.
+        Chargez une image source, définissez la fréquence d'images par seconde (FPS) et le nombre de trames.
+        Utilisez les boutons pour ouvrir, enregistrer et effectuer des opérations spécifiques telles que :
+             -le morphing MTF
+             -le morphing FTM.
+        Vous pouvez également générer des fichiers vidéo MP4 ou GIF à partir des images morphées.
+
+Onglet "Param"
+
+    L'onglet "Param" vous permet de configurer les paramètres:
+      -Directory:
+         -"Set Male directory" vos images d'hommes ( Swap et Gan )
+         -"Set Female directory"
+         -"Set Analyze directory" vos images x, pour l'onglet analyze afin de fouer à devenir les genres
+         -"Set Keras" récupérer vos fichiers d'entrainement si vous en possédez
+         -"Set output" sorite de la génération intermédiaire du Gan
+      -Gan (Réseau Adversarial Génératif):
+         -l'epoch de décompte
+         -le nombre d'époques
+         -la taille du lot
+         -le taux d'apprentissage
+         -decay epoch : epoch à laquelle le taux d'apprentissage est réduit
+         -channels (3 = RGB) in et out
+         -taille resize image
+         -Activez ou désactivez l'utilisation du GPU
+         -nombre de cpu d'usage
+         ----Enregistrez vos paramètres et lancez l'entraînement du GAN avec les boutons dédiés.
+
+Onglet "Analyze"
+
+    L'onglet "Analyze" vous permet d'analyser des images.
+    Vous pouvez choisir entre les options "Homme" et "Femme", et passer à l'image suivante.
+    Les images à analyser seront affichées dans la zone dédiée.
