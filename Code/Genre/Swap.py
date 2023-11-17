@@ -267,6 +267,7 @@ class Swap:
         self.traitement()
         self.replace()
         self.smoothing()
+        self.face = None
     
     # def FindTargetFromDATA():
     #     min_distance = float('inf')
