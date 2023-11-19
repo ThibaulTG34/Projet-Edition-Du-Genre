@@ -1,0 +1,12 @@
+# project directories
+datasets
+logs
+nohup
+debug.log
+test_images
+
+__pycache__
+*.pyc
+
+nohup.out
+output
