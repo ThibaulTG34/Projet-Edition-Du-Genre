@@ -31,8 +31,8 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--epoch', type=int, default=0, help='starting epoch')
-    parser.add_argument('--n_epochs', type=int, default=10, help='number of epochs of training')
-    parser.add_argument('--batchSize', type=int, default=1, help='size of the batches')
+    parser.add_argument('--n_epochs', type=int, default=80, help='number of epochs of training')
+    parser.add_argument('--batchSize', type=int, default=4, help='size of the batches')
     parser.add_argument('--dataroot', type=str, default='datasets/genderchange/', help='root directory of the dataset')
     parser.add_argument('--lr', type=float, default=0.0002, help='initial learning rate')
     parser.add_argument('--decay_epoch', type=int, default=5, help='epoch to start linearly decaying the learning rate to 0')
@@ -235,13 +235,7 @@ def main():
             torch.save(netG_B2A.state_dict(), '{}/{}/netG_B2A.pth'.format(experiment_dir, epoch))
             torch.save(netD_A.state_dict(), '{}/{}/netD_A.pth'.format(experiment_dir, epoch))
             torch.save(netD_B.state_dict(), '{}/{}/netD_B.pth'.format(experiment_dir, epoch))
-        elif epoch > 100 and epoch%40==0 :
-            os.makedirs(os.path.join(experiment_dir, str(epoch)), exist_ok=True) 
-            torch.save(netG_A2B.state_dict(), '{}/{}/netG_A2B.pth'.format(experiment_dir, epoch))
-            torch.save(netG_B2A.state_dict(), '{}/{}/netG_B2A.pth'.format(experiment_dir, epoch))
-            torch.save(netD_A.state_dict(), '{}/{}/netD_A.pth'.format(experiment_dir, epoch))
-            torch.save(netD_B.state_dict(), '{}/{}/netD_B.pth'.format(experiment_dir, epoch))
-        else :
+        elif epoch >= 40 and epoch%40==0 :
             os.makedirs(os.path.join(experiment_dir, str(epoch)), exist_ok=True) 
             torch.save(netG_A2B.state_dict(), '{}/{}/netG_A2B.pth'.format(experiment_dir, epoch))
             torch.save(netG_B2A.state_dict(), '{}/{}/netG_B2A.pth'.format(experiment_dir, epoch))
