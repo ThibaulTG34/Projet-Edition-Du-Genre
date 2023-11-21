@@ -1,4 +1,4 @@
 {
-    "files": ["madona.jpg","shape_predictor_68_face_landmarks.dat","CNN.py","widget.py","Swap.py","shape_predictor_81_face_landmarks.dat","texte.txt","Analyse.py","M1.mp3","trump.jpeg","trump.jpg","madona.jpeg"],
-    "dir": ["madona.jpg","shape_predictor_68_face_landmarks.dat","CNN.py","widget.py","Swap.py","shape_predictor_81_face_landmarks.dat","texte.txt","Analyse.py","M1.mp3","trump.jpeg","trump.jpg","madona.jpeg"]
+    "files": ["Swap.py","shape_predictor_68_face_landmarks.dat","madona.jpeg","CNN.py","shape_predictor_81_face_landmarks.dat","trump.jpeg","Analyse.py","texte.txt","M1.mp3","trump.jpg","widget.py","madona.jpg","classificateur.py"],
+    "dir": ["Swap.py","shape_predictor_68_face_landmarks.dat","madona.jpeg","CNN.py","shape_predictor_81_face_landmarks.dat","trump.jpeg","Analyse.py","texte.txt","M1.mp3","trump.jpg","widget.py","madona.jpg","classificateur.py"]
 }

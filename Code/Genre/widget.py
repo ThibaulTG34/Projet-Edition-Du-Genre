@@ -22,6 +22,7 @@ from PyQt6.QtMultimediaWidgets import *
 from Swap import *
 from CNN import *
 from Analyse import *
+from classificateur import *
 
 _Swap = Swap()
 _CNN = CNN()
@@ -46,6 +47,8 @@ class MainApplication(QMainWindow):
 
         self.image_files = []
         self.current_image_index = -1
+
+        self.last_gender = "Male"
 
         self.gan_parameters = [
             ('Epoch', 'epoch', 0),
@@ -670,9 +673,9 @@ class MainApplication(QMainWindow):
     def analyze_upload(self, option=1):
         file_name = self.image_files[self.current_image_index]
         real_form = ("Male" if option==1 else "Female")
-        _Analyse.update_or_create_entry(str(file_name), str(real_form) , " ")
+        _Analyse.update_or_create_entry(str(file_name), str(real_form) )
         #Pour retirer le chemin complet
-        #_Analyse.update_or_create_entry(str(file_name), str(real_form) , " " , 1)
+        #_Analyse.update_or_create_entry(str(file_name), str(real_form), 1)
                 
     def open_image(self, option=1, name=None):
         if name is not None: file_name = name
@@ -733,6 +736,9 @@ class MainApplication(QMainWindow):
                         q_image = pixmap.toImage()
                         if q_image.save(file_name):
                             print("Image saved successfully.")
+                            _Analyse.update_or_create_entry(str(file_name), str(self.last_gender))
+                            #Pour retirer le chemin complet
+                            #_Analyse.update_or_create_entry(str(file_name), str(self.last_gender), 1)
                         else:
                             print("Failed to save the image.")
                     else:
@@ -778,7 +784,8 @@ class MainApplication(QMainWindow):
                 _CNN.get_animation() if option==1 else _CNN.get_gif()
 
     def Operation_swap(self, option=1):
-        _Swap.set_directory(self.male_directory) if option==1 else _Swap.set_directory(self.female_directory)
+        _Swap.set_directory(self.male_directory) if option == 1 else _Swap.set_directory(self.female_directory)
+        self.last_gender = ("Male" if option==1 else "Female")
         _Swap.swap()
         res = _Swap.get_result()
         res = cv2.cvtColor(res, cv2.COLOR_BGR2RGB)
@@ -802,6 +809,7 @@ class MainApplication(QMainWindow):
 
     def Operation_morph(self, option=1):
         _CNN.set_mode(1) if option == 1 else _CNN.set_mode(2)
+        self.last_gender = ("Male" if option == 1 else "Female" )
         res = _CNN.get_result()
         res = cv2.cvtColor(res, cv2.COLOR_BGR2RGB)
 

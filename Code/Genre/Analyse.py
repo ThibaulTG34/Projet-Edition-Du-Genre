@@ -4,7 +4,7 @@ import json
 import os
 from google.auth import exceptions
 from google.oauth2.service_account import Credentials
-
+from classificateur import *
 class Analyse:
     def __init__(self):
         super().__init__()
@@ -33,7 +33,7 @@ class Analyse:
     def union_path(self):
         self.path_file = os.path.join(self.directory, self.json_file)
 
-    def update_or_create_entry(self, s, s2, s3, option = 0):
+    def update_or_create_entry(self, s, s2, option = 0):
         if not option==0 :
             s = os.path.basename(s)
         try:
@@ -42,11 +42,12 @@ class Analyse:
         except FileNotFoundError:
             data = {}
 
+        _class = classified(s)
         if s in data:
-            data[s]["res"] = s2
-            data[s]["real"] = s3
+            data[s]["real"] = s2
+            data[s]["classificateur"] = _class
         else:
-            data[s] = {"res": s2, "real": s3}
+            data[s] = {"real": s2, "classificateur" : _class}
 
         with open(self.path_file, 'w') as file:
             json.dump(data, file, indent=2)
