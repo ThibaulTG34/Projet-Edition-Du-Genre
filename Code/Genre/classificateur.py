@@ -3,7 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 
 # Image
-#path = './datasets/genderchange/train/B/woman_75.jpg'
+path = './datasets/genderchange/train/B/woman_75.jpg'  
 
 def classified(path):
     if os.path.isfile(path):
@@ -85,6 +85,5 @@ def classified(path):
         gender = lg[genderPreds[0].argmax()] 
             
         print(f'{gender}')
-        return str({gender})
 
-#classified(path)
+classified(path)

@@ -1,1 +1,0 @@
-python train.py --dataroot datasets/genderchange --cuda

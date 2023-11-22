@@ -407,6 +407,13 @@ class MainApplication(QMainWindow):
         self.analyze_homme_button = QPushButton("Homme", self.analyze_tab)
         self.analyze_femme_button = QPushButton("Femme", self.analyze_tab)
         self.analyze_next_button = QPushButton("Next", self.analyze_tab)
+        self.analyze_prec_button = QPushButton("Prec", self.analyze_tab)
+        self.analyze_gnuplot_rc_button = QPushButton("Real_Class.dat", self.analyze_tab)
+        self.analyze_plot_rc_button = QPushButton("Plot Real_Class", self.analyze_tab)
+        self.analyze_gnuplot_uc_button = QPushButton("Real_User.dat", self.analyze_tab)
+        self.analyze_plot_uc_button = QPushButton("Plot Real_User", self.analyze_tab)
+        self.analyze_gnuplot_ur_button = QPushButton("User_Class.dat", self.analyze_tab)
+        self.analyze_plot_ur_button = QPushButton("Plot User_Class", self.analyze_tab)
 
         self.analyze_placeholder = QLabel(self.analyze_tab)
         self.analyze_placeholder.setAutoFillBackground(True)
@@ -417,15 +424,36 @@ class MainApplication(QMainWindow):
         placeholders_layout = QHBoxLayout()
         placeholders_layout.addWidget(self.analyze_placeholder)
 
-        buttons_layout = QHBoxLayout()
-        buttons_layout.addWidget(self.analyze_homme_button)
-        buttons_layout.addWidget(self.analyze_next_button)
-        buttons_layout.addWidget(self.analyze_femme_button)
+        buttons_layout = QVBoxLayout()
+        buttons_layout_haut = QHBoxLayout()
+        buttons_layout_bas = QHBoxLayout()
+        buttons_layout_haut.addWidget(self.analyze_homme_button)
+        buttons_layout_haut.addWidget(self.analyze_prec_button)
+        buttons_layout_haut.addWidget(self.analyze_next_button)
+        buttons_layout_haut.addWidget(self.analyze_femme_button)
+
+        buttons_layout_bas.addWidget(self.analyze_gnuplot_rc_button)
+        buttons_layout_bas.addWidget(self.analyze_plot_rc_button)
+        buttons_layout_bas.addWidget(self.analyze_gnuplot_ur_button)
+        buttons_layout_bas.addWidget(self.analyze_plot_ur_button)
+        buttons_layout_bas.addWidget(self.analyze_gnuplot_uc_button)
+        buttons_layout_bas.addWidget(self.analyze_plot_uc_button)
+
+        buttons_layout.addLayout(buttons_layout_haut)
+        buttons_layout.addLayout(buttons_layout_bas)
 
         button_width = int(self.analyze_tab.width() * 3)
         self.analyze_homme_button.setFixedSize(button_width, self.analyze_homme_button.height())
+        self.analyze_prec_button.setFixedSize(button_width, self.analyze_prec_button.height())
         self.analyze_next_button.setFixedSize(button_width, self.analyze_next_button.height())
         self.analyze_femme_button.setFixedSize(button_width, self.analyze_femme_button.height())
+
+        self.analyze_gnuplot_rc_button.setFixedSize(int(button_width/2), self.analyze_gnuplot_rc_button.height())
+        self.analyze_plot_rc_button.setFixedSize(int(button_width/2), self.analyze_plot_rc_button.height())
+        self.analyze_gnuplot_ur_button.setFixedSize(int(button_width/2), self.analyze_gnuplot_ur_button.height())
+        self.analyze_plot_ur_button.setFixedSize(int(button_width/2), self.analyze_plot_ur_button.height())
+        self.analyze_gnuplot_uc_button.setFixedSize(int(button_width/2), self.analyze_gnuplot_uc_button.height())
+        self.analyze_plot_uc_button.setFixedSize(int(button_width/2), self.analyze_plot_uc_button.height())
 
         self.analyze_layout = QVBoxLayout(self.analyze_tab)
         self.analyze_layout.addLayout(placeholders_layout)
@@ -470,12 +498,19 @@ class MainApplication(QMainWindow):
         self.param_kdir.clicked.connect(self.set_keras_dir)
         self.param_outdir.clicked.connect(self.set_gan_dir)
         self.param_save.clicked.connect(self.set_gan_data)
-        self.param_gan.clicked.connect(train)
+        self.param_gan.clicked.connect(_CNN.train)
 
         #////////////////////////////////////////////////////////////////////////////////
         self.analyze_next_button.clicked.connect(self.load_next_image)
+        self.analyze_prec_button.clicked.connect(self.load_previous_image)
         self.analyze_homme_button.clicked.connect(lambda : self.analyze_upload(option=1))
         self.analyze_femme_button.clicked.connect(lambda : self.analyze_upload(option=2))
+        self.analyze_gnuplot_rc_button.clicked.connect(lambda : self.analyse_gnuplot(option=1))
+        self.analyze_plot_rc_button.clicked.connect(lambda : self.analyse_plot(option=1))
+        self.analyze_gnuplot_uc_button.clicked.connect(lambda : self.analyse_gnuplot(option=2))
+        self.analyze_plot_uc_button.clicked.connect(lambda : self.analyse_plot(option=2))
+        self.analyze_gnuplot_ur_button.clicked.connect(lambda : self.analyse_gnuplot(option=0))
+        self.analyze_plot_ur_button.clicked.connect(lambda : self.analyse_plot(option=0))
 
         #////////////////////////////////////////////////////////////////////////////////
 
@@ -570,12 +605,14 @@ class MainApplication(QMainWindow):
         file_dialog = QFileDialog()
         s = file_dialog.getExistingDirectory(None, "Sélectionnez un dossier de destination")
         self.keras_directory = str(s)
+        _CNN.set_keras_dir(str(s))
         self.keras_text_label.setText(str(s))
 
     def set_gan_dir(self):
         file_dialog = QFileDialog()
         s = file_dialog.getExistingDirectory(None, "Sélectionnez un dossier de destination")
         self.gan_output_directory = str(s)
+        _CNN.set_tensor_dir(str(s))
         self.gan_text_label.setText(str(s))
 
     def get_gpu(self):
@@ -670,12 +707,18 @@ class MainApplication(QMainWindow):
             self.current_image_index = 0
             self.load_image()
 
+    def load_previous_image(self):
+        if self.current_image_index >= 0:
+            self.current_image_index -= 1
+            self.load_image()
+        else:
+            self.current_image_index = 0
+            self.load_image()
+
     def analyze_upload(self, option=1):
         file_name = self.image_files[self.current_image_index]
         real_form = ("Male" if option==1 else "Female")
-        _Analyse.update_or_create_entry(str(file_name), str(real_form) )
-        #Pour retirer le chemin complet
-        #_Analyse.update_or_create_entry(str(file_name), str(real_form), 1)
+        _Analyse.update_or_create_entry(str(file_name), None, str(real_form), 1)
                 
     def open_image(self, option=1, name=None):
         if name is not None: file_name = name
@@ -736,9 +779,7 @@ class MainApplication(QMainWindow):
                         q_image = pixmap.toImage()
                         if q_image.save(file_name):
                             print("Image saved successfully.")
-                            _Analyse.update_or_create_entry(str(file_name), str(self.last_gender))
-                            #Pour retirer le chemin complet
-                            #_Analyse.update_or_create_entry(str(file_name), str(self.last_gender), 1)
+                            _Analyse.update_or_create_entry(str(file_name), str(self.last_gender), None, 1)
                         else:
                             print("Failed to save the image.")
                     else:
@@ -783,9 +824,19 @@ class MainApplication(QMainWindow):
                 _CNN.set_frames(int(self.morph_frames_spinbox.value()))
                 _CNN.get_animation() if option==1 else _CNN.get_gif()
 
+    def analyse_gnuplot(self, option = 1):
+        file_name, _ = QFileDialog.getSaveFileName(self, "Save File", "", "Files (*.dat);;All Files (*)")
+        if file_name:
+            print(_Analyse.path_file)
+            _Analyse.metrique(_Analyse.path_file, option, True, False, str(file_name))
+
+    def analyse_plot(self, option = 1):
+        print(_Analyse.path_file)
+        _Analyse.metrique(_Analyse.path_file, option, False, True)
+
     def Operation_swap(self, option=1):
         _Swap.set_directory(self.male_directory) if option == 1 else _Swap.set_directory(self.female_directory)
-        self.last_gender = ("Male" if option==1 else "Female")
+        self.last_gender = ("Female" if option==1 else "Male")
         _Swap.swap()
         res = _Swap.get_result()
         res = cv2.cvtColor(res, cv2.COLOR_BGR2RGB)
@@ -809,7 +860,7 @@ class MainApplication(QMainWindow):
 
     def Operation_morph(self, option=1):
         _CNN.set_mode(1) if option == 1 else _CNN.set_mode(2)
-        self.last_gender = ("Male" if option == 1 else "Female" )
+        self.last_gender = ("Female" if option == 1 else "Male" )
         res = _CNN.get_result()
         res = cv2.cvtColor(res, cv2.COLOR_BGR2RGB)
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 5.0.2, 2023-11-21T22:51:56. -->
+<!-- Written by QtCreator 5.0.2, 2023-11-23T00:27:03. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -147,59 +147,6 @@
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre</value>
    </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.10">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/shape_predictor_68_face_landmarks.dat</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/shape_predictor_68_face_landmarks.dat</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/shape_predictor_68_face_landmarks.dat</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{f8dc3abe-68d4-42a1-b2cd-2aca427238d4}</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\d3bla\Documents\Cours\Image\Puech\Projet-Edition-Du-Genre\Code\Genre\shape_predictor_68_face_landmarks.dat</value>
-    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.11">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/shape_predictor_81_face_landmarks.dat</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/shape_predictor_81_face_landmarks.dat</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/shape_predictor_81_face_landmarks.dat</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{f8dc3abe-68d4-42a1-b2cd-2aca427238d4}</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\d3bla\Documents\Cours\Image\Puech\Projet-Edition-Du-Genre\Code\Genre\shape_predictor_81_face_landmarks.dat</value>
-    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.12">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/classificateur.py</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/classificateur.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/classificateur.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\d3bla\Documents\Cours\Image\Puech\Projet-Edition-Du-Genre\Code\Genre\classificateur.py</value>
-    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre</value>
-   </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.2">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
@@ -279,24 +226,6 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpeg</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpeg</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpeg</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{f8dc3abe-68d4-42a1-b2cd-2aca427238d4}</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\d3bla\Documents\Cours\Image\Puech\Projet-Edition-Du-Genre\Code\Genre\trump.jpeg</value>
-    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.7">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpg</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/trump.jpg</value>
@@ -308,25 +237,7 @@
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre</value>
    </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.8">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/madona.jpeg</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/madona.jpeg</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/madona.jpeg</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{f8dc3abe-68d4-42a1-b2cd-2aca427238d4}</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\d3bla\Documents\Cours\Image\Puech\Projet-Edition-Du-Genre\Code\Genre\madona.jpeg</value>
-    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.9">
+   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.7">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
@@ -344,7 +255,25 @@
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre</value>
    </valuemap>
-   <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">13</value>
+   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.8">
+    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
+    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
+    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
+    <valuelist type="QVariantList" key="CustomOutputParsers"/>
+    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
+    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/classificateur.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/classificateur.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre/classificateur.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{237b4e8c-28b5-4111-961b-0df0599f2e8a}</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\d3bla\Documents\Cours\Image\Puech\Projet-Edition-Du-Genre\Code\Genre\classificateur.py</value>
+    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
+    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
+    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
+    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/d3bla/Documents/Cours/Image/Puech/Projet-Edition-Du-Genre/Code/Genre</value>
+   </valuemap>
+   <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">9</value>
   </valuemap>
  </data>
  <data>

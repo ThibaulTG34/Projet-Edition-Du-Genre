@@ -30,6 +30,7 @@ Onglet "Param"
          -"Set Analyze directory" vos images x, pour l'onglet analyze afin de fouer à devenir les genres
          -"Set Keras" récupérer vos fichiers d'entrainement si vous en possédez
          -"Set output" sorite de la génération intermédiaire du Gan
+
       -Gan (Réseau Adversarial Génératif):
          -l'epoch de décompte
          -le nombre d'époques
@@ -41,6 +42,15 @@ Onglet "Param"
          -Activez ou désactivez l'utilisation du GPU
          -nombre de cpu d'usage
          ----Enregistrez vos paramètres et lancez l'entraînement du GAN avec les boutons dédiés.
+
+      -Pour le dataSet du gan, please set le dossier tel que :
+         --Directory:
+              -test:
+                  -A --> Male
+                  -B --> Female
+              -train:
+                  -A --> Male
+                  -B --> Female
 
 Onglet "Analyze"
 
