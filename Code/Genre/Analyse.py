@@ -51,7 +51,7 @@ class Analyse:
         if not option==0 :
             s = os.path.basename(s)
 
-        print(_class)
+        #print("Auto classified as " + str(_class))
         if s in data:
             if s2 is not None:
                 data[s]["real"] = s2

@@ -1,4 +1,5 @@
 import os
+import math
 import cv2
 import dlib
 import numpy as np
@@ -231,8 +232,8 @@ class Swap:
                             #Frequences
                             #chi2_distance = float(self.chi2_distance(body_landmarks.flatten(), landmarks.flatten()).statistic)
                             epsilon = 1e-10  
-                            chi2_distance = sum(( (x - y) ** 2 ) / (x + y + epsilon) for x, y in zip(body_landmarks.flatten(), landmarks.flatten()))
-
+                            chi2_distance = float(sum(( (x - y) ** 2 ) / (x + y + epsilon) for x, y in zip(body_landmarks.flatten(), landmarks.flatten())))
+                            chi2_distance = float(math.sqrt(chi2_distance))
                             #Geometrie
                             euclidean_distance = float(np.linalg.norm(body_landmarks.flatten() - landmarks.flatten()))
                             #Forme

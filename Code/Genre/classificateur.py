@@ -10,7 +10,7 @@ def classified(path):
         image = cv2.imread(path)
 
         if (image is None) or (image.size == 0):
-            print("Unknow")
+            print("classified as Unknow")
             return
 
         image = cv2.resize(image, (720, 640))
@@ -30,11 +30,11 @@ def classified(path):
         gen = cv2.dnn.readNet(gen2, gen1) 
 
         if face.empty():
-            print("Unknow")
+            print("classified as Unknow")
             return
 
         if gen.empty():
-            print("Unknow")
+            print("classified as Unknow")
             return
 
         # Category of distribution 
@@ -67,7 +67,7 @@ def classified(path):
                             (0, 255, 0), int(round(fr_h/150)), 8) 
 
         if not faceBoxes: 
-            print("Unknow") 
+            print("classified as Unknow")
                 
         #Extracting face 
         face = fr_cv[max(0, faceBoxes[0][1]-15): 
@@ -84,6 +84,7 @@ def classified(path):
         genderPreds = gen.forward() 
         gender = lg[genderPreds[0].argmax()] 
             
-        print(f'{gender}')
+        #print(f'classified as {gender}')
+        return str(gender)
 
-classified(path)
+#classified(path)

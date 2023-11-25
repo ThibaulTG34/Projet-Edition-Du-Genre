@@ -409,11 +409,11 @@ class MainApplication(QMainWindow):
         self.analyze_next_button = QPushButton("Next", self.analyze_tab)
         self.analyze_prec_button = QPushButton("Prec", self.analyze_tab)
         self.analyze_gnuplot_rc_button = QPushButton("Real_Class.dat", self.analyze_tab)
-        self.analyze_plot_rc_button = QPushButton("Plot Real_Class", self.analyze_tab)
+        #self.analyze_plot_rc_button = QPushButton("Plot Real_Class", self.analyze_tab)
         self.analyze_gnuplot_uc_button = QPushButton("Real_User.dat", self.analyze_tab)
-        self.analyze_plot_uc_button = QPushButton("Plot Real_User", self.analyze_tab)
+        #self.analyze_plot_uc_button = QPushButton("Plot Real_User", self.analyze_tab)
         self.analyze_gnuplot_ur_button = QPushButton("User_Class.dat", self.analyze_tab)
-        self.analyze_plot_ur_button = QPushButton("Plot User_Class", self.analyze_tab)
+        #self.analyze_plot_ur_button = QPushButton("Plot User_Class", self.analyze_tab)
 
         self.analyze_placeholder = QLabel(self.analyze_tab)
         self.analyze_placeholder.setAutoFillBackground(True)
@@ -433,11 +433,11 @@ class MainApplication(QMainWindow):
         buttons_layout_haut.addWidget(self.analyze_femme_button)
 
         buttons_layout_bas.addWidget(self.analyze_gnuplot_rc_button)
-        buttons_layout_bas.addWidget(self.analyze_plot_rc_button)
+        #buttons_layout_bas.addWidget(self.analyze_plot_rc_button)
         buttons_layout_bas.addWidget(self.analyze_gnuplot_ur_button)
-        buttons_layout_bas.addWidget(self.analyze_plot_ur_button)
+        #buttons_layout_bas.addWidget(self.analyze_plot_ur_button)
         buttons_layout_bas.addWidget(self.analyze_gnuplot_uc_button)
-        buttons_layout_bas.addWidget(self.analyze_plot_uc_button)
+        #buttons_layout_bas.addWidget(self.analyze_plot_uc_button)
 
         buttons_layout.addLayout(buttons_layout_haut)
         buttons_layout.addLayout(buttons_layout_bas)
@@ -449,11 +449,11 @@ class MainApplication(QMainWindow):
         self.analyze_femme_button.setFixedSize(button_width, self.analyze_femme_button.height())
 
         self.analyze_gnuplot_rc_button.setFixedSize(int(button_width/2), self.analyze_gnuplot_rc_button.height())
-        self.analyze_plot_rc_button.setFixedSize(int(button_width/2), self.analyze_plot_rc_button.height())
+        #self.analyze_plot_rc_button.setFixedSize(int(button_width/2), self.analyze_plot_rc_button.height())
         self.analyze_gnuplot_ur_button.setFixedSize(int(button_width/2), self.analyze_gnuplot_ur_button.height())
-        self.analyze_plot_ur_button.setFixedSize(int(button_width/2), self.analyze_plot_ur_button.height())
+        #self.analyze_plot_ur_button.setFixedSize(int(button_width/2), self.analyze_plot_ur_button.height())
         self.analyze_gnuplot_uc_button.setFixedSize(int(button_width/2), self.analyze_gnuplot_uc_button.height())
-        self.analyze_plot_uc_button.setFixedSize(int(button_width/2), self.analyze_plot_uc_button.height())
+        #self.analyze_plot_uc_button.setFixedSize(int(button_width/2), self.analyze_plot_uc_button.height())
 
         self.analyze_layout = QVBoxLayout(self.analyze_tab)
         self.analyze_layout.addLayout(placeholders_layout)
@@ -506,11 +506,11 @@ class MainApplication(QMainWindow):
         self.analyze_homme_button.clicked.connect(lambda : self.analyze_upload(option=1))
         self.analyze_femme_button.clicked.connect(lambda : self.analyze_upload(option=2))
         self.analyze_gnuplot_rc_button.clicked.connect(lambda : self.analyse_gnuplot(option=1))
-        self.analyze_plot_rc_button.clicked.connect(lambda : self.analyse_plot(option=1))
+        #self.analyze_plot_rc_button.clicked.connect(lambda : self.analyse_plot(option=1))
         self.analyze_gnuplot_uc_button.clicked.connect(lambda : self.analyse_gnuplot(option=2))
-        self.analyze_plot_uc_button.clicked.connect(lambda : self.analyse_plot(option=2))
+        #self.analyze_plot_uc_button.clicked.connect(lambda : self.analyse_plot(option=2))
         self.analyze_gnuplot_ur_button.clicked.connect(lambda : self.analyse_gnuplot(option=0))
-        self.analyze_plot_ur_button.clicked.connect(lambda : self.analyse_plot(option=0))
+        #self.analyze_plot_ur_button.clicked.connect(lambda : self.analyse_plot(option=0))
 
         #////////////////////////////////////////////////////////////////////////////////
 
