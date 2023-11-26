@@ -879,12 +879,13 @@ class MainApplication(QMainWindow):
 
     def analyse_plot(self, fight_option = 1, model_option = 1, option = 1):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Files (*.dat);;All Files (*)")
-        m_option = option
         if file_name:
             options_dialog = OptionsDialog(self)
             result = options_dialog.exec()
-            m_option = (int(1) if (bool(options_dialog.checkbox_confusion.isChecked()) is True) else int(2))
-            _Analyse.plot_results(file_name, fight_option, model_option, m_option)
+            if options_dialog.checkbox_confusion.isChecked():
+                _Analyse.plot_results(file_name, fight_option, model_option, 1)
+            if options_dialog.checkbox_score.isChecked():
+                _Analyse.plot_results(file_name, fight_option, model_option, 2)
 
     def Operation_swap(self, option=1):
         _Swap.set_directory(self.male_directory) if option == 1 else _Swap.set_directory(self.female_directory)

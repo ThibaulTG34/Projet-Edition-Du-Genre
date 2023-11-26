@@ -265,14 +265,6 @@ class Analyse:
         for line in lines:
             columns = line.strip().split('\t')
 
-            print("line" + str(columns))
-            print(columns[1] == model)
-            print(columns[3] == player)
-            print(columns[5] == adversaire)
-            print(str(columns[1]) + "==" +str(model))
-            print(str(columns[3]) + "==" +str(player))
-            print(str(columns[5]) + "==" +str(adversaire))
-
             if columns[1] == model and columns[3] == player and columns[5] == adversaire:
                 vp = int(columns[7])
                 vn = int(columns[9])
