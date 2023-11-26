@@ -63,6 +63,12 @@ class CNN:
         self.num_frames = 100 # + longue - longue -> interpolation [smoothing video]
         self.in_animation = str("test")
 
+    def to_dict(self):
+        attributes = vars(self)
+        result_dict = {key: str(value) for key, value in attributes.items()}
+        print(result_dict)
+        #return result_dict
+
     def set_root(self, val):
         self.root = str(val)
 

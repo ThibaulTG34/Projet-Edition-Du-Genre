@@ -38,7 +38,7 @@ class Analyse:
     def union_path(self):
         self.path_file = os.path.join(self.directory, self.json_file)
 
-    def update_or_create_entry(self, s, s2, s3 = str("Unknow"), s4 = str("Swap"), option = 0):
+    def update_or_create_entry(self, s, s2, s3 = str("Unknow"), s4 = str("Swap"), gan_parameters = None, option = 1):
 
         try:
             with open(self.path_file, 'r') as file:
@@ -63,11 +63,44 @@ class Analyse:
 
             if s4 is not None:
                 data[s]["model"] = s4
+
+            if gan_parameters is not None:
+                data[s]["gan_epochs"] = str(gan_parameters["nepochs"])
+                data[s]["gan_decay"] = str(gan_parameters["decay_epochs"])
+                data[s]["gan_learning_rate"] = str(gan_parameters["learning_decay"])
+                data[s]["gan_batch_size"] = str(gan_parameters["batch_size"])
+                data[s]["gan_size"] = str(gan_parameters["size"])
+
+
         else:
             if s2 is None: s2 = str("Unknow")
             if s3 is None: s3 = str("Unknow")
             if s4 is None: s4 = str("Unknow")
-            data[s] = {"real": s2, "classificateur" : _class, "user" : s3, "model" : s4}
+            if gan_parameters is None:
+                data[s] = {
+                            "real": s2,
+                            "classificateur": _class,
+                            "user": s3,
+                            "model": s4,
+                            "gan_epochs": str("Unknow"),
+                            "gan_decay": str("Unknow"),
+                            "gan_learning_rate": str("Unknow"),
+                            "gan_batch_size": str("Unknow"),
+                            "gan_size": str("Unknow")
+                        }
+            else:
+                data[s] = {
+                            "real": s2,
+                            "classificateur": _class,
+                            "user": s3,
+                            "model": s4,
+                            "gan_epochs": gan_parameters["nepochs"],
+                            "gan_decay": gan_parameters["decay_epochs"],
+                            "gan_learning_rate": gan_parameters["learning_decay"],
+                            "gan_batch_size": gan_parameters["batch_size"],
+                            "gan_size": gan_parameters["size"]
+                        }
+
 
         with open(self.path_file, 'w') as file:
             json.dump(data, file, indent=2)
@@ -117,6 +150,21 @@ class Analyse:
             classificateur = info['classificateur']
             user = info['user']
             model = info['model']
+            gan_epochs = info["gan_epochs"]
+            gan_decay = info["gan_decay"]
+            gan_learning = info["gan_learning_rate"]
+            gan_batch = info["gan_batch_size"]
+            gan_size = info["gan_size"]
+
+            player = str("user")
+            adversaire = str("machine")
+
+            if option == 1 :
+                player = str("real")
+                adversaire = str("machine")
+            elif option == 2:
+                player = str("real")
+                adversaire = str("user")
 
             if option == 1 :
                 if real == 'Male' and classificateur == 'Male':
@@ -163,9 +211,14 @@ class Analyse:
         print(f'F1 Score: {f1}')
         print(f'Exactitude: {accuracy}')
 
+        gan_decay = info["gan_decay"]
+        gan_learning = info["gan_learning_rate"]
+        gan_batch = info["gan_batch_size"]
+        gan_size = info["gan_size"]
+
         if gnuplot is True:
             with open(output_file_path, 'a') as file:
-                file.write(f'{model}\t{len(vp_list)}\t{len(vn_list)}\t{len(fp_list)}\t{len(fn_list)}\t{precision}\t{recall}\t{f1}\t{accuracy}\n')
+                file.write(f'model\t{model}\tplayer\t{player}\tadversaire\t{adversaire}\tvp\t{len(vp_list)}\tvn\t{len(vn_list)}\tfp\t{len(fp_list)}\tfn\t{len(fn_list)}\tprecision\t{precision}\trecall\t{recall}\tf1\t{f1}\taccuracy\t{accuracy}\tgan_decay\t{gan_decay}\tgan_learning\t{gan_learning}\tgan_batch\t{gan_batch}\tgan_size\t{gan_size}\n')
             print(f'Données ajoutées dans {output_file_path}')
 
         if ploting is True:
@@ -187,3 +240,77 @@ class Analyse:
                 ax.set_ylabel('Valeur')
                 ax.set_title(f'{metric_name} Curve')
                 plt.show()
+
+    def plot_results(self, file_path, fight_option = 1, model_option = 1, option = 1):
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+
+        vp_list = []
+        vn_list = []
+        fp_list = []
+        fn_list = []
+        precision_list = []
+        recall_list = []
+        f1_list = []
+        accuracy_list = []
+        gan_decay_list = []
+        gan_learning_list = []
+        gan_batch_list = []
+        gan_size_list = []
+
+        model = str("Swap" if model_option == 1 else "GAN")
+        player = str("real" if fight_option == 1 else ( "real" if fight_option == 2 else "user"))
+        adversaire = str("machine" if fight_option == 1 else ( "user" if fight_option == 2 else "machine"))
+
+        for line in lines:
+            columns = line.strip().split('\t')
+
+            print("line" + str(columns))
+            print(columns[1] == model)
+            print(columns[3] == player)
+            print(columns[5] == adversaire)
+            print(str(columns[1]) + "==" +str(model))
+            print(str(columns[3]) + "==" +str(player))
+            print(str(columns[5]) + "==" +str(adversaire))
+
+            if columns[1] == model and columns[3] == player and columns[5] == adversaire:
+                vp = int(columns[7])
+                vn = int(columns[9])
+                fp = int(columns[11])
+                fn = int(columns[13])
+                precision = float(columns[15])
+                recall = float(columns[17])
+                f1 = float(columns[19])
+                accuracy = float(columns[21])
+
+                vp_list.append(vp)
+                vn_list.append(vn)
+                fp_list.append(fp)
+                fn_list.append(fn)
+                precision_list.append(precision)
+                recall_list.append(recall)
+                f1_list.append(f1)
+                accuracy_list.append(accuracy)
+
+        if option == 1:
+            plt.bar(range(len(vp_list)), vp_list, label='VP')
+            plt.bar(range(len(vn_list)), vn_list, bottom=vp_list, label='VN')
+            plt.bar(range(len(fp_list)), fp_list, bottom=[vp + vn for vp, vn in zip(vp_list, vn_list)], label='FP')
+            plt.bar(range(len(fn_list)), fn_list, bottom=[vp + vn + fp for vp, vn, fp in zip(vp_list, vn_list, fp_list)], label='FN')
+            plt.legend()
+            plt.title('Confusion Matrix')
+            plt.xlabel('Sample')
+            plt.ylabel('Count')
+            plt.show()
+        elif option == 2:
+            plt.plot(range(len(precision_list)), precision_list, label='Precision')
+            plt.plot(range(len(recall_list)), recall_list, label='Recall')
+            plt.plot(range(len(f1_list)), f1_list, label='F1 Score')
+            plt.plot(range(len(accuracy_list)), accuracy_list, label='Accuracy')
+            plt.legend()
+            plt.title('Precision, Recall, F1 Score, Accuracy')
+            plt.xlabel('Sample')
+            plt.ylabel('Score')
+            plt.show()
+        else:
+            return

@@ -23,5 +23,16 @@
     "real": "Unknow",
     "classificateur": null,
     "user": "Female"
+  },
+  "man_266.jpg": {
+    "real": "Unknow",
+    "classificateur": "Male",
+    "user": "Female",
+    "model": "Unknow",
+    "gan_epochs": "Unknow",
+    "gan_decay": "Unknow",
+    "gan_learning_rate": "Unknow",
+    "gan_batch_size": "Unknow",
+    "gan_size": "Unknow"
   }
 }

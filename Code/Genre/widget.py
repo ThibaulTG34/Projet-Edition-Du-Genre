@@ -28,6 +28,23 @@ _Swap = Swap()
 _CNN = CNN()
 _Analyse = Analyse()
 
+class OptionsDialog(QDialog):
+    def __init__(self, parent=None):
+        super(OptionsDialog, self).__init__(parent)
+        self.setWindowTitle("Options")
+        self.setGeometry(200, 200, 300, 150)
+
+        self.checkbox_confusion = QCheckBox("Confusion Matrix", self)
+        self.checkbox_score = QCheckBox("Score Plot", self)
+
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.checkbox_confusion)
+        layout.addWidget(self.checkbox_score)
+
+        button_ok = QPushButton("OK", self)
+        button_ok.clicked.connect(self.accept)
+        layout.addWidget(button_ok)
+
 class MainApplication(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -417,12 +434,17 @@ class MainApplication(QMainWindow):
         self.analyze_femme_button = QPushButton("Femme", self.analyze_tab)
         self.analyze_next_button = QPushButton("Next", self.analyze_tab)
         self.analyze_prec_button = QPushButton("Prec", self.analyze_tab)
+
         self.analyze_gnuplot_rc_button = QPushButton("Real_Class.dat", self.analyze_tab)
-        #self.analyze_plot_rc_button = QPushButton("Plot Real_Class", self.analyze_tab)
         self.analyze_gnuplot_uc_button = QPushButton("Real_User.dat", self.analyze_tab)
-        #self.analyze_plot_uc_button = QPushButton("Plot Real_User", self.analyze_tab)
         self.analyze_gnuplot_ur_button = QPushButton("User_Class.dat", self.analyze_tab)
-        #self.analyze_plot_ur_button = QPushButton("Plot User_Class", self.analyze_tab)
+
+        self.analyze_plot_swap_rc_button = QPushButton("Plot Swap_Real_Class", self.analyze_tab)
+        self.analyze_plot_swap_uc_button = QPushButton("Plot Swap_Real_User", self.analyze_tab)
+        self.analyze_plot_swap_ur_button = QPushButton("Plot Swap_User_Class", self.analyze_tab)
+        self.analyze_plot_gan_rc_button = QPushButton("Plot Gan_Real_Class", self.analyze_tab)
+        self.analyze_plot_gan_uc_button = QPushButton("Plot Gan_Real_User", self.analyze_tab)
+        self.analyze_plot_gan_ur_button = QPushButton("Plot Gan_User_Class", self.analyze_tab)
 
         self.analyze_placeholder = QLabel(self.analyze_tab)
         self.analyze_placeholder.setAutoFillBackground(True)
@@ -436,20 +458,27 @@ class MainApplication(QMainWindow):
         buttons_layout = QVBoxLayout()
         buttons_layout_haut = QHBoxLayout()
         buttons_layout_bas = QHBoxLayout()
+        buttons_layout_footer = QHBoxLayout()
+
         buttons_layout_haut.addWidget(self.analyze_homme_button)
         buttons_layout_haut.addWidget(self.analyze_prec_button)
         buttons_layout_haut.addWidget(self.analyze_next_button)
         buttons_layout_haut.addWidget(self.analyze_femme_button)
 
         buttons_layout_bas.addWidget(self.analyze_gnuplot_rc_button)
-        #buttons_layout_bas.addWidget(self.analyze_plot_rc_button)
         buttons_layout_bas.addWidget(self.analyze_gnuplot_ur_button)
-        #buttons_layout_bas.addWidget(self.analyze_plot_ur_button)
         buttons_layout_bas.addWidget(self.analyze_gnuplot_uc_button)
-        #buttons_layout_bas.addWidget(self.analyze_plot_uc_button)
+
+        buttons_layout_footer.addWidget(self.analyze_plot_swap_rc_button)
+        buttons_layout_footer.addWidget(self.analyze_plot_swap_ur_button)
+        buttons_layout_footer.addWidget(self.analyze_plot_swap_uc_button)
+        buttons_layout_footer.addWidget(self.analyze_plot_gan_rc_button)
+        buttons_layout_footer.addWidget(self.analyze_plot_gan_ur_button)
+        buttons_layout_footer.addWidget(self.analyze_plot_gan_uc_button)
 
         buttons_layout.addLayout(buttons_layout_haut)
         buttons_layout.addLayout(buttons_layout_bas)
+        buttons_layout.addLayout(buttons_layout_footer)
 
         button_width = int(self.analyze_tab.width() * 3)
         self.analyze_homme_button.setFixedSize(button_width, self.analyze_homme_button.height())
@@ -457,12 +486,16 @@ class MainApplication(QMainWindow):
         self.analyze_next_button.setFixedSize(button_width, self.analyze_next_button.height())
         self.analyze_femme_button.setFixedSize(button_width, self.analyze_femme_button.height())
 
-        self.analyze_gnuplot_rc_button.setFixedSize(int(button_width/2), self.analyze_gnuplot_rc_button.height())
-        #self.analyze_plot_rc_button.setFixedSize(int(button_width/2), self.analyze_plot_rc_button.height())
-        self.analyze_gnuplot_ur_button.setFixedSize(int(button_width/2), self.analyze_gnuplot_ur_button.height())
-        #self.analyze_plot_ur_button.setFixedSize(int(button_width/2), self.analyze_plot_ur_button.height())
-        self.analyze_gnuplot_uc_button.setFixedSize(int(button_width/2), self.analyze_gnuplot_uc_button.height())
-        #self.analyze_plot_uc_button.setFixedSize(int(button_width/2), self.analyze_plot_uc_button.height())
+        self.analyze_gnuplot_rc_button.setFixedSize(int(button_width), self.analyze_gnuplot_rc_button.height())
+        self.analyze_gnuplot_ur_button.setFixedSize(int(button_width), self.analyze_gnuplot_ur_button.height())
+        self.analyze_gnuplot_uc_button.setFixedSize(int(button_width), self.analyze_gnuplot_uc_button.height())
+
+        self.analyze_plot_swap_ur_button.setFixedSize(int(button_width/2), self.analyze_plot_swap_ur_button.height())
+        self.analyze_plot_swap_rc_button.setFixedSize(int(button_width/2), self.analyze_plot_swap_rc_button.height())
+        self.analyze_plot_swap_uc_button.setFixedSize(int(button_width/2), self.analyze_plot_swap_uc_button.height())
+        self.analyze_plot_gan_ur_button.setFixedSize(int(button_width/2), self.analyze_plot_gan_ur_button.height())
+        self.analyze_plot_gan_rc_button.setFixedSize(int(button_width/2), self.analyze_plot_gan_rc_button.height())
+        self.analyze_plot_gan_uc_button.setFixedSize(int(button_width/2), self.analyze_plot_gan_uc_button.height())
 
         self.analyze_layout = QVBoxLayout(self.analyze_tab)
         self.analyze_layout.addLayout(placeholders_layout)
@@ -515,11 +548,16 @@ class MainApplication(QMainWindow):
         self.analyze_homme_button.clicked.connect(lambda : self.analyze_upload(option=1))
         self.analyze_femme_button.clicked.connect(lambda : self.analyze_upload(option=2))
         self.analyze_gnuplot_rc_button.clicked.connect(lambda : self.analyse_gnuplot(option=1))
-        #self.analyze_plot_rc_button.clicked.connect(lambda : self.analyse_plot(option=1))
         self.analyze_gnuplot_uc_button.clicked.connect(lambda : self.analyse_gnuplot(option=2))
-        #self.analyze_plot_uc_button.clicked.connect(lambda : self.analyse_plot(option=2))
         self.analyze_gnuplot_ur_button.clicked.connect(lambda : self.analyse_gnuplot(option=0))
-        #self.analyze_plot_ur_button.clicked.connect(lambda : self.analyse_plot(option=0))
+
+        self.analyze_plot_swap_rc_button.clicked.connect(lambda : self.analyse_plot(fight_option=1, model_option=1, option=2))
+        self.analyze_plot_swap_uc_button.clicked.connect(lambda : self.analyse_plot(fight_option=3, model_option=1, option=2))
+        self.analyze_plot_swap_ur_button.clicked.connect(lambda : self.analyse_plot(fight_option=2, model_option=1, option=2))
+
+        self.analyze_plot_gan_rc_button.clicked.connect(lambda : self.analyse_plot(fight_option=1, model_option=2, option=2))
+        self.analyze_plot_gan_uc_button.clicked.connect(lambda : self.analyse_plot(fight_option=3, model_option=2, option=2))
+        self.analyze_plot_gan_ur_button.clicked.connect(lambda : self.analyse_plot(fight_option=2, model_option=2, option=2))
 
         #////////////////////////////////////////////////////////////////////////////////
 
@@ -665,7 +703,8 @@ class MainApplication(QMainWindow):
         _CNN.set(7,self.get_out_channel())
         _CNN.set(8,self.get_cpu())
         _CNN.set(9,self.get_gpu())
-        _CNN.print_parameters()
+        #_CNN.print_parameters()
+        _CNN.to_dict()
 
     def load_help_text(self, help_tab):
         try:
@@ -727,8 +766,8 @@ class MainApplication(QMainWindow):
     def analyze_upload(self, option=1):
         file_name = self.image_files[self.current_image_index]
         real_form = ("Male" if option==1 else "Female")
-        _Analyse.update_or_create_entry(str(file_name), None, str(real_form), None, 1)
-                
+        _Analyse.update_or_create_entry(str(file_name), None, str(real_form), None, None, 1)
+
     def open_image(self, option=1, name=None):
         if name is not None: file_name = name
         else: file_name, _ = QFileDialog.getOpenFileName(self, "Open Image File", "", "Image Files (*.png *.jpg *.jpeg *.bmp);;All Files (*)")
@@ -788,7 +827,7 @@ class MainApplication(QMainWindow):
                         q_image = pixmap.toImage()
                         if q_image.save(file_name):
                             print("Image saved successfully.")
-                            _Analyse.update_or_create_entry(str(file_name), str(self.last_gender), None, ("Swap" if option_model == 1 else "GAN"), 1)
+                            _Analyse.update_or_create_entry(str(file_name), str(self.last_gender), None, ("Swap" if option_model == 1 else "GAN"), (None if option_model == 1 else _CNN.to_dict()),1)
                         else:
                             print("Failed to save the image.")
                     else:
@@ -836,12 +875,16 @@ class MainApplication(QMainWindow):
     def analyse_gnuplot(self, option = 1):
         file_name, _ = QFileDialog.getSaveFileName(self, "Save File", "", "Files (*.dat);;All Files (*)")
         if file_name:
-            print(_Analyse.path_file)
             _Analyse.metrique(_Analyse.path_file, option, True, False, str(file_name))
 
-    def analyse_plot(self, option = 1):
-        print(_Analyse.path_file)
-        _Analyse.metrique(_Analyse.path_file, option, False, True)
+    def analyse_plot(self, fight_option = 1, model_option = 1, option = 1):
+        file_name, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Files (*.dat);;All Files (*)")
+        m_option = option
+        if file_name:
+            options_dialog = OptionsDialog(self)
+            result = options_dialog.exec()
+            m_option = (int(1) if (bool(options_dialog.checkbox_confusion.isChecked()) is True) else int(2))
+            _Analyse.plot_results(file_name, fight_option, model_option, m_option)
 
     def Operation_swap(self, option=1):
         _Swap.set_directory(self.male_directory) if option == 1 else _Swap.set_directory(self.female_directory)
