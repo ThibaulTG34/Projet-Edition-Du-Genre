@@ -9,6 +9,7 @@ import glob
 import scipy
 import itertools
 import os
+import shutil
 
 import cv2
 from cv2 import imread, resize
@@ -18,6 +19,7 @@ from collections import defaultdict
 from datetime import datetime
 
 import torchvision.transforms as transforms
+from torchvision.utils import save_image
 from torch.utils.data import DataLoader
 from torch.autograd import Variable
 from PIL import Image
@@ -37,8 +39,8 @@ class CNN:
         super().__init__()
         self.root = str("./data")
         self.start_epochs = 0
-        self.nepochs = 161
-        self.decay_epochs = 58
+        self.nepochs = 1
+        self.decay_epochs = 0
         self.learning_decay = float(0.002)
         self.size = 256
         self.batch_size = 1
@@ -49,9 +51,12 @@ class CNN:
 
         self.keras_dir = str("./keras")
         self.tensor_dir = str("./tensor")
+        self.last_save_eochs = str("./keras")
 
         self.mode = 0
         self.source = None
+        self.source_name = None
+        self.target_name = None
         self.result = None
 
         self.fps = 15 # + vite - vite -> lecture [temps video]
@@ -72,7 +77,11 @@ class CNN:
         self.mode = v
 
     def set_source(self, s):
+        self.source_name = str(s)
         self.source = cv2.imread(str(s))
+
+    def set_mode(self, m):
+        self.mode = int(m)
 
     def set_frames(self, f):
         self.num_frames = int(f)
@@ -81,6 +90,8 @@ class CNN:
         self.fps = int(f)
 
     def get_result(self):
+        if self.target_name is None : return
+        self.result = cv2.imread(self.target_name)
         return self.result
 
     def set_animation(self,name):
@@ -182,7 +193,7 @@ class CNN:
         self.gpu = bool(self.gpu)
 
         if torch.cuda.is_available() and not (self.gpu is True):
-            print("WARNING: You have a CUDA device, so you should probably run with --cuda")
+            print("WARNING: You have a CUDA device, so you should probably run with GPU")
 
         # Networks
         netG_A2B = Generator(self.inchannel, self.outchannel)
@@ -375,9 +386,92 @@ class CNN:
                 torch.save(netG_B2A.state_dict(), '{}/{}/netG_B2A.pth'.format(self.keras_dir, epoch))
                 torch.save(netD_A.state_dict(), '{}/{}/netD_A.pth'.format(self.keras_dir, epoch))
                 torch.save(netD_B.state_dict(), '{}/{}/netD_B.pth'.format(self.keras_dir, epoch))
-            print(" \n ---- Saved in " + os.path.join(self.keras_dir, str(epoch)))
+            elif epoch == (self.nepochs - 1):
+                self.last_save_eochs = str(os.path.join(self.keras_dir, str(epoch)))
+                os.makedirs(os.path.join(self.keras_dir, str(epoch)), exist_ok=True)
+                torch.save(netG_A2B.state_dict(), '{}/{}/netG_A2B.pth'.format(self.keras_dir, epoch))
+                torch.save(netG_B2A.state_dict(), '{}/{}/netG_B2A.pth'.format(self.keras_dir, epoch))
+                torch.save(netD_A.state_dict(), '{}/{}/netD_A.pth'.format(self.keras_dir, epoch))
+                torch.save(netD_B.state_dict(), '{}/{}/netD_B.pth'.format(self.keras_dir, epoch))
+            print(" \n ---- Saved in " + self.last_save_eochs)
 
             for title, value in metric_dict.items():
                 writer.add_scalar("train/{}_epoch".format(title), np.mean(value), epoch)
 
         ###################################
+
+    def morphing(self, option = 1):
+        self.size = int(self.size)
+        self.inchannel = int(self.inchannel)
+        self.outchannel = int(self.outchannel)
+        self.cpu = int(self.cpu)
+        self.gpu = bool(self.gpu)
+
+        gan_generator = (str(self.keras_dir + '/netG_A2B.pth') if option == 1 else str(self.keras_dir + '/netG_B2A.pth'))
+
+        if torch.cuda.is_available() and not (self.gpu is True):
+            print("WARNING: You have a CUDA device, so you should probably run with GPU")
+
+        # Network
+        netG = (Generator(self.inchannel, self.outchannel) if option == 1 else Generator(self.outchannel, self.inchannel))
+        #Homme to femme if 1 else femme to homme
+
+        if self.gpu is True:
+            netG.cuda()
+
+        # Load state dicts
+        netG.load_state_dict(torch.load(gan_generator))
+
+        # Set test mode
+        netG.eval()
+
+        # Inputs & targets memory allocation
+        Tensor = torch.cuda.FloatTensor if self.gpu else torch.Tensor
+        input_A = Tensor(self.batch_size, self.inchannel, self.size, self.size)
+        input_B = Tensor(self.batch_size, self.outchannel, self.size, self.size)
+
+        # Dataset loader
+        transforms_ = [transforms.Resize((self.size, self.size), Image.BICUBIC),
+                        transforms.ToTensor(),
+                        transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5))]
+
+        cheat_directory = "./cheat"
+        os.makedirs(cheat_directory, exist_ok=True)
+        os.makedirs(cheat_directory + "/test", exist_ok=True)
+        os.makedirs(cheat_directory + "/test" + (str( "/A" if option == 1 else "/B")) , exist_ok = True)
+        os.makedirs(cheat_directory + "/test" + (str( "/B" if option == 1 else "/A")) , exist_ok = True)
+        cv2.imwrite(str(cheat_directory + "/test" + (str( "/A/" if option == 1 else "/B/")) + str(os.path.basename(self.source_name)) ), self.source)
+        cv2.imwrite(str(cheat_directory + "/test" + (str( "/B/" if option == 1 else "/A/")) + str(os.path.basename(self.source_name)) ), self.source)
+        dataloader = DataLoader(ImageDataset(cheat_directory, transforms_=transforms_, mode='test'),
+                                batch_size=int(1), shuffle=False, num_workers=self.cpu)
+
+        ###################################
+
+        ###### Testing######
+
+        # Create output dirs if they don't exist
+        if (not (option == 1)) and (not os.path.exists('./output/ToMale')):
+            os.makedirs('./output/ToMale')
+        if (option == 1) and (not os.path.exists('./output/ToFemale')):
+            os.makedirs('./output/ToFemale')
+
+        for i, batch in enumerate(dataloader):
+            if option == 1:
+                #input
+                real_A = Variable(input_A.copy_(batch['A']))
+                fake_B = 0.5*(netG(real_A).data + 1.0)
+                save_image(real_A, 'output/ToFemale/A2B_%04d_real.jpg' % (i+1))
+                save_image(fake_B, 'output/ToFemale/A2B_%04d.jpg' % (i+1))
+                self.target_name = str('output/ToFemale/A2B_%04d.jpg' % (i+1))
+            else:
+                #input
+                real_B = Variable(input_B.copy_(batch['B']))
+                fake_A = 0.5*(netG(real_B).data + 1.0)
+                save_image(real_B, 'output/ToMale/B2A_%04d_real.jpg' % (i+1))
+                save_image(fake_A, 'output/ToMale/B2A_%04d.jpg' % (i+1))
+                self.target_name = str('output/ToMale/B2A_%04d.jpg' % (i+1))
+            break
+
+        shutil.rmtree(cheat_directory, ignore_errors=True)
+        print("###########################")
+        return

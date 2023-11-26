@@ -327,6 +327,7 @@ class MainApplication(QMainWindow):
         row_layout_epoch = QHBoxLayout()
         row_layout_epoch.addWidget(QLabel(self.gan_parameters[0][0]))
         self.param_epoch_spinbox = QSpinBox()
+        self.param_epoch_spinbox.setRange(0, 100000000)
         self.param_epoch_spinbox.setValue(int(self.gan_parameters[0][2]))
         row_layout_epoch.addWidget(self.param_epoch_spinbox)
         self.param_gan_layout.addLayout(row_layout_epoch)
@@ -334,6 +335,7 @@ class MainApplication(QMainWindow):
         row_layout_nepoch = QHBoxLayout()
         row_layout_nepoch.addWidget(QLabel(self.gan_parameters[1][0]))
         self.param_nepoch_spinbox = QSpinBox()
+        self.param_nepoch_spinbox.setRange(0, 100000000)
         self.param_nepoch_spinbox.setValue(int(self.gan_parameters[1][2]))
         row_layout_nepoch.addWidget(self.param_nepoch_spinbox)
         self.param_gan_layout.addLayout(row_layout_nepoch)
@@ -341,20 +343,23 @@ class MainApplication(QMainWindow):
         row_layout_batchsize = QHBoxLayout()
         row_layout_batchsize.addWidget(QLabel(self.gan_parameters[2][0]))
         self.param_batchsize_spinbox = QSpinBox()
+        self.param_batchsize_spinbox.setRange(0, 100000000)
         self.param_batchsize_spinbox.setValue(int(self.gan_parameters[2][2]))
         row_layout_batchsize.addWidget(self.param_batchsize_spinbox)
         self.param_gan_layout.addLayout(row_layout_batchsize)
 
         row_layout_learning_rate = QHBoxLayout()
         row_layout_learning_rate.addWidget(QLabel(self.gan_parameters[3][0]))
-        self.param_learning_rate_spinbox = QSpinBox()
-        self.param_learning_rate_spinbox.setValue(int(self.gan_parameters[3][2]))
+        self.param_learning_rate_spinbox = QDoubleSpinBox()
+        self.param_learning_rate_spinbox.setRange(0.0, 100000000.0)
+        self.param_learning_rate_spinbox.setValue(float(self.gan_parameters[3][2]))
         row_layout_learning_rate.addWidget(self.param_learning_rate_spinbox)
         self.param_gan_layout.addLayout(row_layout_learning_rate)
 
         row_layout_depoch = QHBoxLayout()
         row_layout_depoch.addWidget(QLabel(self.gan_parameters[4][0]))
         self.param_depoch_spinbox = QSpinBox()
+        self.param_depoch_spinbox.setRange(0, 100000000)
         self.param_depoch_spinbox.setValue(int(self.gan_parameters[4][2]))
         row_layout_depoch.addWidget(self.param_depoch_spinbox)
         self.param_gan_layout.addLayout(row_layout_depoch)
@@ -362,6 +367,7 @@ class MainApplication(QMainWindow):
         row_layout_size = QHBoxLayout()
         row_layout_size.addWidget(QLabel(self.gan_parameters[5][0]))
         self.param_size_spinbox = QSpinBox()
+        self.param_size_spinbox.setRange(0, 100000000)
         self.param_size_spinbox.setValue(int(self.gan_parameters[5][2]))
         row_layout_size.addWidget(self.param_size_spinbox)
         self.param_gan_layout.addLayout(row_layout_size)
@@ -369,6 +375,7 @@ class MainApplication(QMainWindow):
         row_layout_inchannel = QHBoxLayout()
         row_layout_inchannel.addWidget(QLabel(self.gan_parameters[6][0]))
         self.param_inchannel_spinbox = QSpinBox()
+        self.param_inchannel_spinbox.setRange(0, 4)
         self.param_inchannel_spinbox.setValue(int(self.gan_parameters[6][2]))
         row_layout_inchannel.addWidget(self.param_inchannel_spinbox)
         self.param_gan_layout.addLayout(row_layout_inchannel)
@@ -376,6 +383,7 @@ class MainApplication(QMainWindow):
         row_layout_outchannel = QHBoxLayout()
         row_layout_outchannel.addWidget(QLabel(self.gan_parameters[7][0]))
         self.param_outchannel_spinbox = QSpinBox()
+        self.param_outchannel_spinbox.setRange(0, 4)
         self.param_outchannel_spinbox.setValue(int(self.gan_parameters[7][2]))
         row_layout_outchannel.addWidget(self.param_outchannel_spinbox)
         self.param_gan_layout.addLayout(row_layout_outchannel)
@@ -390,6 +398,7 @@ class MainApplication(QMainWindow):
         row_layout_cpu = QHBoxLayout()
         row_layout_cpu.addWidget(QLabel(self.gan_parameters[9][0]))
         self.param_cpu_spinbox = QSpinBox()
+        self.param_cpu_spinbox.setRange(0, 1000)
         self.param_cpu_spinbox.setValue(int(self.gan_parameters[9][2]))
         row_layout_cpu.addWidget(self.param_cpu_spinbox)
         self.param_gan_layout.addLayout(row_layout_cpu)
@@ -473,7 +482,7 @@ class MainApplication(QMainWindow):
 
         self.swap_gauche_open_button.clicked.connect(lambda: self.open_image(option=3))
         self.swap_droite_open_button.clicked.connect(lambda: self.open_image(option=4))
-        self.swap_save_button.clicked.connect(lambda: self.save_image(option=3))
+        self.swap_save_button.clicked.connect(lambda: self.save_image(option=3, option_model=1))
         self.swap_mtf_button.clicked.connect(lambda: self.Operation_swap(option=1))
         self.swap_ftm_button.clicked.connect(lambda: self.Operation_swap(option=2))
         self.swap_mp4_button.clicked.connect(lambda: self.on_swap_anim_button_clicked(option=1))
@@ -482,7 +491,7 @@ class MainApplication(QMainWindow):
 
         #////////////////////////////////////////////////////////////////////////////////
         self.morph_gauche_open_button.clicked.connect(lambda: self.open_image(option=1))
-        self.morph_save_button.clicked.connect(lambda: self.save_image(option=1))
+        self.morph_save_button.clicked.connect(lambda: self.save_image(option=1, option_model=2))
         self.morph_mtf_button.clicked.connect(lambda: self.Operator_morph(option=1))
         self.morph_ftm_button.clicked.connect(lambda: self.Operator_morph(option=2))
         self.morph_mp4_button.clicked.connect(lambda: self.on_morph_anim_button_clicked(option=1))
@@ -718,7 +727,7 @@ class MainApplication(QMainWindow):
     def analyze_upload(self, option=1):
         file_name = self.image_files[self.current_image_index]
         real_form = ("Male" if option==1 else "Female")
-        _Analyse.update_or_create_entry(str(file_name), None, str(real_form), 1)
+        _Analyse.update_or_create_entry(str(file_name), None, str(real_form), None, 1)
                 
     def open_image(self, option=1, name=None):
         if name is not None: file_name = name
@@ -762,7 +771,7 @@ class MainApplication(QMainWindow):
             else:
                 print("Failed to open the image")
 
-    def save_image(self, option=1):
+    def save_image(self, option = 1, option_model = 1):
         file_name, _ = QFileDialog.getSaveFileName(self, "Save Image File", "", "Image Files (*.png *.jpg *.jpeg *.bmp);;All Files (*)")
         if file_name:
             active_tab = self.central_widget.currentWidget()
@@ -779,7 +788,7 @@ class MainApplication(QMainWindow):
                         q_image = pixmap.toImage()
                         if q_image.save(file_name):
                             print("Image saved successfully.")
-                            _Analyse.update_or_create_entry(str(file_name), str(self.last_gender), None, 1)
+                            _Analyse.update_or_create_entry(str(file_name), str(self.last_gender), None, ("Swap" if option_model == 1 else "GAN"), 1)
                         else:
                             print("Failed to save the image.")
                     else:
@@ -858,10 +867,12 @@ class MainApplication(QMainWindow):
         _Morph.landmark_morph()
         self.Operation_morph()
 
-    def Operation_morph(self, option=1):
+    def Operator_morph(self, option=1):
         _CNN.set_mode(1) if option == 1 else _CNN.set_mode(2)
         self.last_gender = ("Female" if option == 1 else "Male" )
+        _CNN.morphing(option)
         res = _CNN.get_result()
+        if res is None : return
         res = cv2.cvtColor(res, cv2.COLOR_BGR2RGB)
 
         q_image = QImage(res.data, res.shape[1], res.shape[0], res.shape[1] * 3, QImage.Format.Format_RGB888)
@@ -884,7 +895,7 @@ class MainApplication(QMainWindow):
         output_directory = "results/m2f/"
         if not os.path.exists(output_directory):
             os.makedirs(output_directory)
-        train()
+        _CNN.train()
         param_test()
 
 def main():

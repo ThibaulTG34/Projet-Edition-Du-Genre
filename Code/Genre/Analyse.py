@@ -38,7 +38,7 @@ class Analyse:
     def union_path(self):
         self.path_file = os.path.join(self.directory, self.json_file)
 
-    def update_or_create_entry(self, s, s2, s3 = str("Unknow"), option = 0):
+    def update_or_create_entry(self, s, s2, s3 = str("Unknow"), s4 = str("Swap"), option = 0):
 
         try:
             with open(self.path_file, 'r') as file:
@@ -60,10 +60,14 @@ class Analyse:
 
             if s3 is not None:
                 data[s]["user"] = s3
+
+            if s4 is not None:
+                data[s]["model"] = s4
         else:
             if s2 is None: s2 = str("Unknow")
             if s3 is None: s3 = str("Unknow")
-            data[s] = {"real": s2, "classificateur" : _class, "user" : s3}
+            if s4 is None: s4 = str("Unknow")
+            data[s] = {"real": s2, "classificateur" : _class, "user" : s3, "model" : s4}
 
         with open(self.path_file, 'w') as file:
             json.dump(data, file, indent=2)
@@ -112,6 +116,7 @@ class Analyse:
             real = info['real']
             classificateur = info['classificateur']
             user = info['user']
+            model = info['model']
 
             if option == 1 :
                 if real == 'Male' and classificateur == 'Male':
@@ -160,7 +165,7 @@ class Analyse:
 
         if gnuplot is True:
             with open(output_file_path, 'a') as file:
-                file.write(f'{len(vp_list)}\t{len(vn_list)}\t{len(fp_list)}\t{len(fn_list)}\t{precision}\t{recall}\t{f1}\t{accuracy}\n')
+                file.write(f'{model}\t{len(vp_list)}\t{len(vn_list)}\t{len(fp_list)}\t{len(fn_list)}\t{precision}\t{recall}\t{f1}\t{accuracy}\n')
             print(f'Données ajoutées dans {output_file_path}')
 
         if ploting is True:
