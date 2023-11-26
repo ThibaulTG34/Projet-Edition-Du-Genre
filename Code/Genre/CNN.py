@@ -357,7 +357,7 @@ class CNN:
                 metric_dict['loss_D'].append(loss_D_A.item() + loss_D_B.item())
 
                 for title, value in metric_dict.items():
-                    writer.add_scalar('train/{}'.format(title), value[-1], n_iters_total)
+                    writer.add_scalar('./tensor/{}'.format(title), value[-1], n_iters_total)
 
                 n_iters_total += 1
 

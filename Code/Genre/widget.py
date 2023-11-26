@@ -31,8 +31,17 @@ _Analyse = Analyse()
 class OptionsDialog(QDialog):
     def __init__(self, parent=None):
         super(OptionsDialog, self).__init__(parent)
-        self.setWindowTitle("Options")
-        self.setGeometry(200, 200, 300, 150)
+        self.setWindowTitle("Plotting options")
+
+        ecran_pc = QGuiApplication.primaryScreen().availableGeometry()
+        self.x = ecran_pc.width() / 6
+        self.y = ecran_pc.height() / 4
+        self.z = ecran_pc.width() / 4
+        self.t = ecran_pc.height() / 4
+
+        self.setGeometry(int(self.x), int(self.y), int(self.z), int(self.t))
+        self.setMinimumSize(int(self.x/2), int(self.y/2))
+        self.setMaximumSize(int(self.z/2), int(self.t/2))
 
         self.checkbox_confusion = QCheckBox("Confusion Matrix", self)
         self.checkbox_score = QCheckBox("Score Plot", self)
@@ -50,7 +59,16 @@ class MainApplication(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Sirin magical Morph")
-        self.setGeometry(100, 100, 800, 600)
+
+        ecran_pc = QGuiApplication.primaryScreen().availableGeometry()
+        self.x = int(ecran_pc.width() / 7.5)
+        self.y = int(ecran_pc.height() / 5.2)
+        self.z = int(ecran_pc.width() * 1.6)
+        self.t = int(ecran_pc.height() * 1.5)
+
+        self.setGeometry(self.x, self.y, self.z, self.t)
+        self.setMinimumSize(int(self.x/2), int(self.y/2))
+        self.setMaximumSize(int(self.z/2), int(self.t/2))
 
         self.male_directory = str("./")
         self.female_directory = str("./")
@@ -288,7 +306,9 @@ class MainApplication(QMainWindow):
 
         # Floating square
         self.param_floating_square = QFrame(self.param_tab)
-        self.param_floating_square.setGeometry(200, 200, 400, 400)
+        a = int(int(self.x)/4)
+        b = int(int(self.x)/2)
+        self.param_floating_square.setGeometry(a,a,b,b)
         self.param_floating_square.setStyleSheet("background-color: gray;")
         self.param_floating_square_layout = QVBoxLayout(self.param_floating_square)
 
@@ -873,9 +893,10 @@ class MainApplication(QMainWindow):
                 _CNN.get_animation() if option==1 else _CNN.get_gif()
 
     def analyse_gnuplot(self, option = 1):
-        file_name, _ = QFileDialog.getSaveFileName(self, "Save File", "", "Files (*.dat);;All Files (*)")
-        if file_name:
-            _Analyse.metrique(_Analyse.path_file, option, True, False, str(file_name))
+        file_name_in, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Files (*.json);;All Files (*)")
+        file_name_out, _ = QFileDialog.getSaveFileName(self, "Save File", "", "Files (*.dat);;All Files (*)")
+        if file_name_in and file_name_out:
+            _Analyse.metrique(str(file_name_in), option, True, False, str(file_name_out))
 
     def analyse_plot(self, fight_option = 1, model_option = 1, option = 1):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Files (*.dat);;All Files (*)")
