@@ -1,5 +1,4 @@
 # This Python file uses the following encoding: utf-8
-import gspread
 import json
 import os
 import cv2
@@ -105,40 +104,12 @@ class Analyse:
         with open(self.path_file, 'w') as file:
             json.dump(data, file, indent=2)
 
-    def init_sheet(self):
-        try:
-            credentials = Credentials.from_service_account_file('credentials.json', scopes=['url'])
-            gc = gspread.authorize(credentials)
-            self.sheet = gc.open('ProjetGenre')
-        except exceptions.DefaultCredentialsError as e:
-            raise ValueError("Impossible de charger les informations d'identification.")
-
-        self.sheet = gc.open('ProjetGenre')
-
-    def update_sheet(self, data):
-        worksheet = self.sheet.worksheet("ProjectGenre")
-
-        records = worksheet.get_all_records()
-
-        record_exists = False
-        for record in records:
-            if record["Name"] == data[0]:
-                record["Homme"] = data[1]
-                record["Femme"] = data[2]
-                record["Res"] = data[3]
-                record_exists = True
-                break
-
-        if not record_exists:
-            worksheet.append_table(data)
-
-
     #Vrais Positifs (VP): Nombre d'images correctement classées comme "Male".
     #Vrais Négatifs (VN): Nombre d'images correctement classées comme "Female".
     #Faux Positifs (FP): Nombre d'images incorrectement classées comme "Male" alors qu'elles sont réellement "Female".
     #Faux Négatifs (FN): Nombre d'images incorrectement classées comme "Female" alors qu'elles sont réellement "Male".
 
-    def metrique(self, path, option = 1, gnuplot = False, ploting = False, output_file_path = str("metrics_data.dat")):
+    def metrique(self, path, option = 1, gnuplot = False, m_model = str("Swap"), output_file_path = str("metrics_data.dat")):
 
         with open(path, 'r') as f:
             data = json.load(f)
@@ -158,7 +129,6 @@ class Analyse:
 
             player = str("user")
             adversaire = str("machine")
-
             if option == 1 :
                 player = str("real")
                 adversaire = str("machine")
@@ -166,35 +136,37 @@ class Analyse:
                 player = str("real")
                 adversaire = str("user")
 
-            if option == 1 :
-                if real == 'Male' and classificateur == 'Male':
-                    vp_list.append(filename)
-                elif real == 'Female' and classificateur == 'Female':
-                    vn_list.append(filename)
-                elif real == 'Female' and classificateur == 'Male':
-                    fp_list.append(filename)
-                elif real == 'Male' and classificateur == 'Female':
-                    fn_list.append(filename)
+            if str(model) == str(m_model):
 
-            elif option == 2 :
-                if real == 'Male' and user == 'Male':
-                    vp_list.append(filename)
-                elif real == 'Female' and user == 'Female':
-                    vn_list.append(filename)
-                elif real == 'Female' and user == 'Male':
-                    fp_list.append(filename)
-                elif real == 'Male' and user == 'Female':
-                    fn_list.append(filename)
+                if option == 1 :
+                    if real == 'Male' and classificateur == 'Male':
+                        vp_list.append(filename)
+                    elif real == 'Female' and classificateur == 'Female':
+                        vn_list.append(filename)
+                    elif real == 'Female' and classificateur == 'Male':
+                        fp_list.append(filename)
+                    elif real == 'Male' and classificateur == 'Female':
+                        fn_list.append(filename)
 
-            else:
-                if user == 'Male' and classificateur == 'Male':
-                    vp_list.append(filename)
-                elif user == 'Female' and classificateur == 'Female':
-                    vn_list.append(filename)
-                elif user == 'Female' and classificateur == 'Male':
-                    fp_list.append(filename)
-                elif user == 'Male' and classificateur == 'Female':
-                    fn_list.append(filename)
+                elif option == 2 :
+                    if real == 'Male' and user == 'Male':
+                        vp_list.append(filename)
+                    elif real == 'Female' and user == 'Female':
+                        vn_list.append(filename)
+                    elif real == 'Female' and user == 'Male':
+                        fp_list.append(filename)
+                    elif real == 'Male' and user == 'Female':
+                        fn_list.append(filename)
+
+                else:
+                    if user == 'Male' and classificateur == 'Male':
+                        vp_list.append(filename)
+                    elif user == 'Female' and classificateur == 'Female':
+                        vn_list.append(filename)
+                    elif user == 'Female' and classificateur == 'Male':
+                        fp_list.append(filename)
+                    elif user == 'Male' and classificateur == 'Female':
+                        fn_list.append(filename)
 
         precision = len(vp_list) / ((len(vp_list) + len(fp_list)) if (len(vp_list) + len(fp_list)) != 0 else 1)
         recall = len(vp_list) / ((len(vp_list) + len(fn_list)) if (len(vp_list) + len(fn_list)) != 0 else 1)
@@ -221,26 +193,6 @@ class Analyse:
                 file.write(f'model\t{model}\tplayer\t{player}\tadversaire\t{adversaire}\tvp\t{len(vp_list)}\tvn\t{len(vn_list)}\tfp\t{len(fp_list)}\tfn\t{len(fn_list)}\tprecision\t{precision}\trecall\t{recall}\tf1\t{f1}\taccuracy\t{accuracy}\tgan_decay\t{gan_decay}\tgan_learning\t{gan_learning}\tgan_batch\t{gan_batch}\tgan_size\t{gan_size}\n')
             print(f'Données ajoutées dans {output_file_path}')
 
-        if ploting is True:
-            confusion_matrix_names = ['VP', 'VN', 'FP', 'FN']
-            confusion_matrix_values = [len(vp_list), len(vn_list), len(fp_list), len(fn_list)]
-            metrics_curve_names = ['Precision', 'Recall', 'F1 Score', 'Accuracy']
-            metrics_curve_values = [precision, recall, f1, accuracy]
-
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.bar(confusion_matrix_names, confusion_matrix_values, color=['green', 'blue', 'red', 'purple'])
-            ax.set_ylabel('Nombre d\'échantillons')
-            ax.set_title('Confusion Matrix Metrics')
-            plt.show()
-
-            for metric_name, metric_value in zip(metrics_curve_names, metrics_curve_values):
-                fig, ax = plt.subplots(figsize=(10, 6))
-                ax.plot([metric_name], [metric_value], marker='o', linestyle='-', color='b')
-                ax.set_ylim([0, 1])
-                ax.set_ylabel('Valeur')
-                ax.set_title(f'{metric_name} Curve')
-                plt.show()
-
     def plot_results(self, file_path, fight_option = 1, model_option = 1, option = 1):
         with open(file_path, 'r') as file:
             lines = file.readlines()
@@ -253,17 +205,16 @@ class Analyse:
         recall_list = []
         f1_list = []
         accuracy_list = []
-        gan_decay_list = []
-        gan_learning_list = []
-        gan_batch_list = []
-        gan_size_list = []
 
         model = str("Swap" if model_option == 1 else "GAN")
         player = str("real" if fight_option == 1 else ( "real" if fight_option == 2 else "user"))
         adversaire = str("machine" if fight_option == 1 else ( "user" if fight_option == 2 else "machine"))
 
+        #print("Model[]" + model + "] for : " + player + " vs " + adversaire)
         for line in lines:
             columns = line.strip().split('\t')
+
+            print(str(columns[1]) + str(columns[3]) + str(columns[5]))
 
             if columns[1] == model and columns[3] == player and columns[5] == adversaire:
                 vp = int(columns[7])
@@ -284,6 +235,12 @@ class Analyse:
                 f1_list.append(f1)
                 accuracy_list.append(accuracy)
 
+        total = sum(vp_list) + sum(vn_list) + sum(fp_list) + sum(fn_list)
+
+        vp_list = [vp / total for vp in vp_list]
+        vn_list = [vp / total for vp in vn_list]
+        fp_list = [vp / total for vp in fp_list]
+        fn_list = [vp / total for vp in fn_list]
         if option == 1:
             plt.bar(range(len(vp_list)), vp_list, label='VP')
             plt.bar(range(len(vn_list)), vn_list, bottom=vp_list, label='VN')
@@ -292,7 +249,7 @@ class Analyse:
             plt.legend()
             plt.title('Confusion Matrix')
             plt.xlabel('Sample')
-            plt.ylabel('Count')
+            plt.ylabel('Pourcentage')
             plt.show()
         elif option == 2:
             plt.plot(range(len(precision_list)), precision_list, label='Precision')
@@ -306,3 +263,15 @@ class Analyse:
             plt.show()
         else:
             return
+
+#_Analyse = Analyse()
+#_Analyse.metrique("./analyze.json", 1, True, "Swap", str("./metrics_data_1.dat"))
+#_Analyse.metrique("./analyze.json", 2, True, "Swap", str("./metrics_data_2.dat"))
+#_Analyse.metrique("./analyze.json", 3, True, "Swap", str("./metrics_data_3.dat"))
+
+#_Analyse.plot_results(str("./metrics_data_1.dat"), 1, 2, 1)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 1)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), 1, 1, 2)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 2)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2)
