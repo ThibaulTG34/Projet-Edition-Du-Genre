@@ -34,5 +34,27 @@
     "gan_learning_rate": "Unknow",
     "gan_batch_size": "Unknow",
     "gan_size": "Unknow"
+  },
+  "23.png": {
+    "real": "Male",
+    "classificateur": "Male",
+    "user": "Unknow",
+    "model": "GAN",
+    "gan_epochs": "Unknow",
+    "gan_decay": "Unknow",
+    "gan_learning_rate": "Unknow",
+    "gan_batch_size": "Unknow",
+    "gan_size": "Unknow"
+  },
+  "a.png": {
+    "real": "Female",
+    "classificateur": "Male",
+    "user": "Unknow",
+    "model": "Swap",
+    "gan_epochs": "Unknow",
+    "gan_decay": "Unknow",
+    "gan_learning_rate": "Unknow",
+    "gan_batch_size": "Unknow",
+    "gan_size": "Unknow"
   }
 }

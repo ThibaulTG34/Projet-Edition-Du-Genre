@@ -313,8 +313,8 @@ class MainApplication(QMainWindow):
         self.param_floating_square_layout = QVBoxLayout(self.param_floating_square)
 
         # Buttons
-        self.param_mdir = QPushButton("Set Male directory -> ")
-        self.param_fdir = QPushButton("Set Female directory -> ")
+        self.param_mdir = QPushButton("Set Female Img directory -> ")
+        self.param_fdir = QPushButton("Set Male Img directory -> ")
         self.param_adir = QPushButton("Set Analyze directory -> ")
         self.param_json = QPushButton("Set JSON directory -> ")
         self.param_kdir = QPushButton("Set Keras directory -> ")

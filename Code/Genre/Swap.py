@@ -72,7 +72,7 @@ class Swap:
 
     def get_index(self, arr):
         index = 0
-        if arr[0]:
+        if all(arr[0]):
             index = arr[0][0]
         return index
 
@@ -213,7 +213,7 @@ class Swap:
             _name = str(" ")
 
             for file_name in os.listdir(str(self.directory)):
-                print("--------------------------" + file_name)
+                #print("--------------------------" + file_name)
                 if file_name.lower().endswith(tuple(image_extensions)):
                     image_path = os.path.join(str(self.directory), file_name)
                     image = cv2.imread(image_path)
@@ -304,7 +304,7 @@ class Swap:
 
     def animation(self):
         if self.body.shape != self.result.shape:
-            raise ValueError("Les deux images doivent avoir la même taille.")
+           self.body = cv2.resize(self.body, (self.result.shape[1], self.result.shape[0]))
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(self.in_animation + ".mp4", fourcc, self.fps, (self.body.shape[1], self.body.shape[0]))
@@ -320,7 +320,7 @@ class Swap:
 
     def create_animation(self):
         if self.body.shape != self.result.shape:
-            raise ValueError("Les deux images doivent avoir la même taille.")
+            self.body = cv2.resize(self.body, (self.result.shape[1], self.result.shape[0]))
 
         frames = []
 

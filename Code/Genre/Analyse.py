@@ -70,7 +70,6 @@ class Analyse:
                 data[s]["gan_batch_size"] = str(gan_parameters["batch_size"])
                 data[s]["gan_size"] = str(gan_parameters["size"])
 
-
         else:
             if s2 is None: s2 = str("Unknow")
             if s3 is None: s3 = str("Unknow")

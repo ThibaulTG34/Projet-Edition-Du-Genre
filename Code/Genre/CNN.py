@@ -18,11 +18,13 @@ import dlib
 from collections import defaultdict
 from datetime import datetime
 
+from PIL import Image
+import imageio
+
 import torchvision.transforms as transforms
 from torchvision.utils import save_image
 from torch.utils.data import DataLoader
 from torch.autograd import Variable
-from PIL import Image
 import torch
 
 from models.generator import Generator
@@ -66,8 +68,8 @@ class CNN:
     def to_dict(self):
         attributes = vars(self)
         result_dict = {key: str(value) for key, value in attributes.items()}
-        print(result_dict)
-        #return result_dict
+        #print(result_dict)
+        return result_dict
 
     def set_root(self, val):
         self.root = str(val)
@@ -115,7 +117,7 @@ class CNN:
 
     def animation(self):
         if self.source.shape != self.result.shape:
-            raise ValueError("Les deux images doivent avoir la même taille.")
+            self.source = cv2.resize(self.source, (self.result.shape[1], self.result.shape[0]))
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(self.in_animation + ".mp4", fourcc, self.fps, (self.source.shape[1], self.source.shape[0]))
@@ -131,7 +133,7 @@ class CNN:
 
     def create_animation(self):
         if self.source.shape != self.result.shape:
-            raise ValueError("Les deux images doivent avoir la même taille.")
+            self.source = cv2.resize(self.source, (self.result.shape[1], self.result.shape[0]))
 
         frames = []
 
@@ -356,8 +358,12 @@ class CNN:
                 metric_dict['loss_G_cycle'].append(loss_cycle_ABA.item() + loss_cycle_BAB.item())
                 metric_dict['loss_D'].append(loss_D_A.item() + loss_D_B.item())
 
+                #for title, value in metric_dict.items():
+                #    writer.add_scalar('./tensor/{}'.format(title), value[-1], n_iters_total)
                 for title, value in metric_dict.items():
-                    writer.add_scalar('./tensor/{}'.format(title), value[-1], n_iters_total)
+                    tensor_path = str(self.tensor_dir / title)
+                    print("tensor in : + " + str(tensor_path))
+                    writer.add_scalar(tensor_path, value[-1], n_iters_total)
 
                 n_iters_total += 1
 

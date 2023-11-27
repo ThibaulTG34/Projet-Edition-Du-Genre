@@ -11,7 +11,7 @@ def classified(path):
 
         if (image is None) or (image.size == 0):
             print("classified as Unknow")
-            return
+            return str("Unknow")
 
         image = cv2.resize(image, (720, 640))
         fr_cv = image.copy()
@@ -31,11 +31,11 @@ def classified(path):
 
         if face.empty():
             print("classified as Unknow")
-            return
+            return str("Unknow")
 
         if gen.empty():
             print("classified as Unknow")
-            return
+            return str("Unknow")
 
         # Category of distribution 
         lg = ['Male', 'Female'] 
@@ -43,8 +43,12 @@ def classified(path):
         # Face detection 
         fr_h = fr_cv.shape[0] 
         fr_w = fr_cv.shape[1] 
-        blob = cv2.dnn.blobFromImage(fr_cv, 1.0, (300, 300), 
-                                    [104, 117, 123], True, False) 
+        try:
+            blob = cv2.dnn.blobFromImage(
+                fr_cv, 1.0, (300, 300), [104, 117, 123], True, False)
+        except cv2.error as e:
+            print(f"Une erreur s'est produite lors de la création du blob : {e}")
+            return str("Unknow")
                 
         face.setInput(blob) 
         detections = face.forward()
@@ -76,9 +80,13 @@ def classified(path):
                                 fr_cv.shape[1]-1)] 
             
         #Extracting the main blob 
-        blob = cv2.dnn.blobFromImage( 
-            face, 1.0, (227, 227), MODEL_MEAN_VALUES, swapRB=False) 
-            
+        try:
+            blob = cv2.dnn.blobFromImage(
+                face, 1.0, (227, 227), MODEL_MEAN_VALUES, swapRB=False)
+        except cv2.error as e:
+            print(f"Une erreur s'est produite lors de la création du blob : {e}")
+            return str("Unknow")
+
         #Prediction of gender 
         gen.setInput(blob) 
         genderPreds = gen.forward() 
