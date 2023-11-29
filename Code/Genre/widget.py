@@ -45,10 +45,12 @@ class OptionsDialog(QDialog):
 
         self.checkbox_confusion = QCheckBox("Confusion Matrix", self)
         self.checkbox_score = QCheckBox("Score Plot", self)
+        self.checkbox_waouh = QCheckBox("+Dimension", self)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.checkbox_confusion)
         layout.addWidget(self.checkbox_score)
+        layout.addWidget(self.checkbox_waouh)
 
         button_ok = QPushButton("OK", self)
         button_ok.clicked.connect(self.accept)
@@ -313,8 +315,8 @@ class MainApplication(QMainWindow):
         self.param_floating_square_layout = QVBoxLayout(self.param_floating_square)
 
         # Buttons
-        self.param_mdir = QPushButton("Set Female Img directory -> ")
-        self.param_fdir = QPushButton("Set Male Img directory -> ")
+        self.param_mdir = QPushButton("Set Male directory -> ")
+        self.param_fdir = QPushButton("Set Female directory -> ")
         self.param_adir = QPushButton("Set Analyze directory -> ")
         self.param_json = QPushButton("Set JSON directory -> ")
         self.param_kdir = QPushButton("Set Keras directory -> ")
@@ -917,9 +919,15 @@ class MainApplication(QMainWindow):
             options_dialog = OptionsDialog(self)
             result = options_dialog.exec()
             if options_dialog.checkbox_confusion.isChecked():
-                _Analyse.plot_results(file_name, fight_option, model_option, 1)
+                if options_dialog.checkbox_waouh.isChecked():
+                    _Analyse.plot_results(file_name, fight_option, model_option, 1, True)
+                else:
+                    _Analyse.plot_results(file_name, fight_option, model_option, 1, False)
             if options_dialog.checkbox_score.isChecked():
-                _Analyse.plot_results(file_name, fight_option, model_option, 2)
+                if options_dialog.checkbox_waouh.isChecked():
+                    _Analyse.plot_results(file_name, fight_option, model_option, 2, True)
+                else:
+                    _Analyse.plot_results(file_name, fight_option, model_option, 2, False)
 
     def Operation_swap(self, option=1):
         _Swap.set_directory(self.male_directory) if option == 1 else _Swap.set_directory(self.female_directory)
