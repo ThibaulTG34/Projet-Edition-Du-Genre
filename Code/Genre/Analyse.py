@@ -4,6 +4,7 @@ import os
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
 from google.auth import exceptions
 from google.oauth2.service_account import Credentials
@@ -69,6 +70,7 @@ class Analyse:
                 data[s]["gan_learning_rate"] = str(gan_parameters["learning_decay"])
                 data[s]["gan_batch_size"] = str(gan_parameters["batch_size"])
                 data[s]["gan_size"] = str(gan_parameters["size"])
+
 
         else:
             if s2 is None: s2 = str("Unknow")
@@ -192,7 +194,7 @@ class Analyse:
                 file.write(f'model\t{model}\tplayer\t{player}\tadversaire\t{adversaire}\tvp\t{len(vp_list)}\tvn\t{len(vn_list)}\tfp\t{len(fp_list)}\tfn\t{len(fn_list)}\tprecision\t{precision}\trecall\t{recall}\tf1\t{f1}\taccuracy\t{accuracy}\tgan_decay\t{gan_decay}\tgan_learning\t{gan_learning}\tgan_batch\t{gan_batch}\tgan_size\t{gan_size}\n')
             print(f'Données ajoutées dans {output_file_path}')
 
-    def plot_results(self, file_path, fight_option = 1, model_option = 1, option = 1):
+    def plot_results(self, file_path, fight_option = 1, model_option = 1, option = 1, proj = False):
         with open(file_path, 'r') as file:
             lines = file.readlines()
 
@@ -209,11 +211,9 @@ class Analyse:
         player = str("real" if fight_option == 1 else ( "real" if fight_option == 2 else "user"))
         adversaire = str("machine" if fight_option == 1 else ( "user" if fight_option == 2 else "machine"))
 
-        #print("Model[]" + model + "] for : " + player + " vs " + adversaire)
+        #print("Model[" + model + "] for : " + player + " vs " + adversaire)
         for line in lines:
             columns = line.strip().split('\t')
-
-            print(str(columns[1]) + str(columns[3]) + str(columns[5]))
 
             if columns[1] == model and columns[3] == player and columns[5] == adversaire:
                 vp = int(columns[7])
@@ -241,36 +241,61 @@ class Analyse:
         fp_list = [vp / total for vp in fp_list]
         fn_list = [vp / total for vp in fn_list]
         if option == 1:
-            plt.bar(range(len(vp_list)), vp_list, label='VP')
-            plt.bar(range(len(vn_list)), vn_list, bottom=vp_list, label='VN')
-            plt.bar(range(len(fp_list)), fp_list, bottom=[vp + vn for vp, vn in zip(vp_list, vn_list)], label='FP')
-            plt.bar(range(len(fn_list)), fn_list, bottom=[vp + vn + fp for vp, vn, fp in zip(vp_list, vn_list, fp_list)], label='FN')
-            plt.legend()
-            plt.title('Confusion Matrix')
-            plt.xlabel('Sample')
-            plt.ylabel('Pourcentage')
-            plt.show()
+            if proj is True:
+                labels = ['VP', 'VN', 'FP', 'FN']
+                sizes = [sum(vp_list), sum(vn_list), sum(fp_list), sum(fn_list)]
+                fig = go.Figure()
+                fig.add_trace(go.Pie(labels=labels, values=sizes, hole=0.4))
+                fig.update_layout(title='Confusion Matrix (3D Projection)', scene=dict(aspectmode='data'))
+                fig.show()
+            else:
+                labels = ['VP', 'VN', 'FP', 'FN']
+                sizes = [sum(vp_list), sum(vn_list), sum(fp_list), sum(fn_list)]
+                max_index = sizes.index(max(sizes))
+                explode = [0] * 4
+                explode[max_index] = 0.1  
+                plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, explode=explode)
+                plt.title('Confusion Matrix')
+                plt.show()
         elif option == 2:
-            plt.plot(range(len(precision_list)), precision_list, label='Precision')
-            plt.plot(range(len(recall_list)), recall_list, label='Recall')
-            plt.plot(range(len(f1_list)), f1_list, label='F1 Score')
-            plt.plot(range(len(accuracy_list)), accuracy_list, label='Accuracy')
-            plt.legend()
-            plt.title('Precision, Recall, F1 Score, Accuracy')
-            plt.xlabel('Sample')
-            plt.ylabel('Score')
-            plt.show()
+            if proj is True : 
+                metrics = ['Precision', 'Recall', 'F1 Score', 'Accuracy']
+                lines = [(precision_list, 'Precision'), (recall_list, 'Recall'), (f1_list, 'F1 Score'), (accuracy_list, 'Accuracy')]
+                fig = go.Figure()
+                for metric_data, metric_label in lines:
+                    fig.add_trace(go.Scatter3d(
+                        x=list(range(len(metric_data))),
+                        y=[metric_label] * len(metric_data),
+                        z=metric_data,
+                        mode='lines+markers',
+                        name=metric_label
+                    ))
+                fig.update_layout(scene=dict(aspectmode="cube", xaxis=dict(title_text='Sample'), yaxis=dict(title_text='Metric'), zaxis=dict(title_text='Score')),
+                                title='Precision, Recall, F1 Score, Accuracy (3D)')
+                fig.show()
+            else :
+                plt.plot(range(len(precision_list)), precision_list, label='Precision')
+                plt.plot(range(len(recall_list)), recall_list, label='Recall')
+                plt.plot(range(len(f1_list)), f1_list, label='F1 Score')
+                plt.plot(range(len(accuracy_list)), accuracy_list, label='Accuracy')
+                plt.legend()
+                plt.title('Precision, Recall, F1 Score, Accuracy')
+                plt.xlabel('Sample')
+                plt.ylabel('Score')
+                plt.show()
         else:
             return
 
-#_Analyse = Analyse()
+_Analyse = Analyse()
 #_Analyse.metrique("./analyze.json", 1, True, "Swap", str("./metrics_data_1.dat"))
 #_Analyse.metrique("./analyze.json", 2, True, "Swap", str("./metrics_data_2.dat"))
 #_Analyse.metrique("./analyze.json", 3, True, "Swap", str("./metrics_data_3.dat"))
 
 #_Analyse.plot_results(str("./metrics_data_1.dat"), 1, 2, 1)
 #_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 1)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1)
+_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1,False)
+_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1,True)
 #_Analyse.plot_results(str("./metrics_data_1.dat"), 1, 1, 2)
 #_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 2)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2)
+_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2,False)
+_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2,True)
