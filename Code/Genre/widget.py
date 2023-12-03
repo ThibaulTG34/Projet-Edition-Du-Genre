@@ -72,12 +72,12 @@ class MainApplication(QMainWindow):
         self.setMinimumSize(int(self.x/2), int(self.y/2))
         self.setMaximumSize(int(self.z/2), int(self.t/2))
 
-        self.male_directory = str("./")
-        self.female_directory = str("./")
-        self.analyse_directory = str("./")
-        self.json_directory = str("./")
-        self.keras_directory = str("./")
-        self.gan_output_directory = str("./")
+        self.male_directory = str("./data/train/A")
+        self.female_directory = str("./data/train/B")
+        self.analyse_directory = str("./output")
+        self.json_directory = str("./output")
+        self.keras_directory = str("./keras")
+        self.gan_output_directory = str("./tensor")
 
         self.central_widget = QStackedWidget(self)
         self.setCentralWidget(self.central_widget)
@@ -321,7 +321,7 @@ class MainApplication(QMainWindow):
         self.param_json = QPushButton("Set JSON directory -> ")
         self.param_kdir = QPushButton("Set Keras directory -> ")
         self.param_outdir = QPushButton("Set Gan Output directory -> ")
-        self.param_save = QPushButton("Save Gan settings")
+        self.param_save = QPushButton("Save Computing settings")
         self.param_gan = QPushButton("Active Train")
 
         hbox_layout = QHBoxLayout()
@@ -441,6 +441,14 @@ class MainApplication(QMainWindow):
         self.param_cpu_spinbox.setValue(int(self.gan_parameters[9][2]))
         row_layout_cpu.addWidget(self.param_cpu_spinbox)
         self.param_gan_layout.addLayout(row_layout_cpu)
+
+        row_layout_threshold = QHBoxLayout()
+        row_layout_threshold.addWidget(QLabel(str("Swap threshold")))
+        self.param_threshold_spinbox = QDoubleSpinBox()
+        self.param_threshold_spinbox.setRange(0.0, 100000000.0)
+        self.param_threshold_spinbox.setValue(float(_Swap.threshold))
+        row_layout_threshold.addWidget(self.param_threshold_spinbox)
+        self.param_gan_layout.addLayout(row_layout_threshold)
 
         self.param_floating_square_layout.addLayout(self.param_gan_layout)
         self.param_layout.addWidget(self.param_floating_square)
@@ -710,7 +718,7 @@ class MainApplication(QMainWindow):
         return int(self.param_depoch_spinbox.value())
 
     def get_learning_rate(self):
-        return float(int(self.param_learning_rate_spinbox.value())/100)
+        return float(self.param_learning_rate_spinbox.value())
 
     def get_batch_size(self):
         return int(self.param_batchsize_spinbox.value())
@@ -727,6 +735,9 @@ class MainApplication(QMainWindow):
     def get_cpu(self):
         return int(self.param_cpu_spinbox.value())
 
+    def get_threshold(self):
+        return float(self.param_threshold_spinbox.value())
+
     def set_gan_data(self):
         _CNN.set(0,self.get_epoch())
         _CNN.set(1,self.get_nepoch())
@@ -740,6 +751,7 @@ class MainApplication(QMainWindow):
         _CNN.set(9,self.get_gpu())
         #_CNN.print_parameters()
         _CNN.to_dict()
+        _Swap.set_threshold(self.get_threshold())
 
     def load_help_text(self, help_tab):
         try:

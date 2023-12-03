@@ -31,6 +31,9 @@ class Swap:
         self.num_frames = 100 # + longue - longue -> interpolation [smoothing video]
         self.in_animation = str("test")
 
+        self.threshold = float(125.0)
+        self.diff = float(0.0)
+
     def set_face(self,name):
         self.face_name = str(name)
         self.face = cv2.imread(str(name))
@@ -54,6 +57,9 @@ class Swap:
     def set_fps(self, f):
         self.fps = int(f)
 
+    def set_threshold(self, v):
+        self.threshold = float(v)
+
     def prepare_variables(self):
         self.face_gray = cv2.cvtColor(self.face, cv2.COLOR_BGR2GRAY)
         self.body_gray = cv2.cvtColor(self.body, cv2.COLOR_BGR2GRAY)
@@ -63,6 +69,21 @@ class Swap:
         self.detector = dlib.get_frontal_face_detector()
         pwd = os.path.dirname(__file__)
         self.predictor = dlib.shape_predictor("./shape/shape_predictor_81_face_landmarks.dat")
+
+        image1 = self.face
+        image2 = self.body
+        image2 = cv2.resize(image2, (image1.shape[1], image1.shape[0]))
+
+        difference = cv2.absdiff(image1, image2)
+        difference_gray = cv2.cvtColor(difference, cv2.COLOR_BGR2GRAY)
+        normalized_difference = cv2.normalize(difference_gray, None, 0, 255, cv2.NORM_MINMAX)
+        mean_difference = np.mean(normalized_difference)
+        self.diff = float(mean_difference)
+
+        #_ , thresholded_difference = cv2.threshold(normalized_difference, self.threshold, 255, cv2.THRESH_BINARY)
+        #cv2.imshow('Thresholded Difference', thresholded_difference)
+
+        print(f"Somme des différences : {self.diff}")
 
     def get_landmarks(self, landmarks, landmarks_points):
         for n in range(68):
@@ -196,7 +217,7 @@ class Swap:
     def smoothing(self):
         (x, y, widht, height) = cv2.boundingRect(self.contour2)
         self.center_face2 = (int((x+x+widht)/2), int((y+y+height)/2))
-        self.seamlessclone = cv2.seamlessClone(self.result, self.body, self.body_head_mask, self.center_face2, cv2.NORMAL_CLONE)
+        self.seamlessclone = cv2.seamlessClone(self.result, self.body, self.body_head_mask, self.center_face2, (cv2.NORMAL_CLONE if ((self.diff < self.threshold) or (self.threshold < 0.0)) else cv2.MIXED_CLONE))
         self.result = self.seamlessclone
 
     def chi2_distance(self, hist1, hist2):
