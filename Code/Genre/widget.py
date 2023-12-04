@@ -78,6 +78,7 @@ class MainApplication(QMainWindow):
         self.json_directory = str("./output")
         self.keras_directory = str("./keras")
         self.gan_output_directory = str("./tensor")
+        self.gan_train_directory = str(_CNN.root)
 
         self.central_widget = QStackedWidget(self)
         self.setCentralWidget(self.central_widget)
@@ -88,17 +89,18 @@ class MainApplication(QMainWindow):
         self.last_gender = "Male"
 
         self.gan_parameters = [
-            ('Epoch', 'epoch', 0),
-            ('Number of Epochs', 'n_epochs', 10),
-            ('Batch Size', 'batchSize', 1),
-            ('Learning Rate', 'lr', 0.0002),
-            ('Decay Epoch', 'decay_epoch', 5),
-            ('Size', 'size', 256),
-            ('Input Channels', 'input_nc', 3),
-            ('Output Channels', 'output_nc', 3),
-            ('Use GPU', 'cuda', False),
-            ('Number of CPU Threads', 'n_cpu', 8),
+            ('Epoch', 'epoch', int(_CNN.start_epochs)),
+            ('Number of Epochs', 'n_epochs', int(_CNN.nepochs)),
+            ('Batch Size', 'batchSize', int(_CNN.batch_size)),
+            ('Learning Rate', 'lr', float(_CNN.learning_decay)),
+            ('Decay Epoch', 'decay_epoch', int(_CNN.decay_epochs)),
+            ('Size', 'size', int(_CNN.size)),
+            ('Input Channels', 'input_nc', int(_CNN.inchannel)),
+            ('Output Channels', 'output_nc', int(_CNN.outchannel)),
+            ('Use GPU', 'cuda', bool(_CNN.gpu)),
+            ('Number of CPU Threads', 'n_cpu', int(_CNN.cpu))
         ]
+
 
         self.init_tabs()
 
@@ -320,7 +322,8 @@ class MainApplication(QMainWindow):
         self.param_adir = QPushButton("Set Analyze directory -> ")
         self.param_json = QPushButton("Set JSON directory -> ")
         self.param_kdir = QPushButton("Set Keras directory -> ")
-        self.param_outdir = QPushButton("Set Gan Output directory -> ")
+        self.param_outdir = QPushButton("Set tensor logs directory -> ")
+        self.param_train = QPushButton("Set Training set directory -> ")
         self.param_save = QPushButton("Save Computing settings")
         self.param_gan = QPushButton("Active Train")
 
@@ -360,8 +363,29 @@ class MainApplication(QMainWindow):
         hbox_layout.addWidget(self.gan_text_label)
         self.param_floating_square_layout.addLayout(hbox_layout)
 
+        hbox_layout = QHBoxLayout()
+        hbox_layout.addWidget(self.param_train)
+        self.gan_text_label = QLabel(self.gan_train_directory)
+        hbox_layout.addWidget(self.gan_text_label)
+        self.param_floating_square_layout.addLayout(hbox_layout)
+
         # SpinBox
         self.param_gan_layout = QVBoxLayout()
+
+        row_layout_threshold = QHBoxLayout()
+        row_layout_threshold.addWidget(QLabel(str("Swap threshold")))
+        self.param_threshold_spinbox = QDoubleSpinBox()
+        self.param_threshold_spinbox.setRange(0.0, 100000000.0)
+        self.param_threshold_spinbox.setValue(float(_Swap.threshold))
+        row_layout_threshold.addWidget(self.param_threshold_spinbox)
+        self.param_gan_layout.addLayout(row_layout_threshold)
+
+        row_layout_gpu = QHBoxLayout()
+        row_layout_gpu.addWidget(QLabel(self.gan_parameters[8][0]))
+        self.param_gpu_checkbox = QCheckBox()
+        self.param_gpu_checkbox.setChecked(bool(self.gan_parameters[8][2]))
+        row_layout_gpu.addWidget(self.param_gpu_checkbox)
+        self.param_gan_layout.addLayout(row_layout_gpu)
 
         row_layout_epoch = QHBoxLayout()
         row_layout_epoch.addWidget(QLabel(self.gan_parameters[0][0]))
@@ -427,13 +451,6 @@ class MainApplication(QMainWindow):
         row_layout_outchannel.addWidget(self.param_outchannel_spinbox)
         self.param_gan_layout.addLayout(row_layout_outchannel)
 
-        row_layout_gpu = QHBoxLayout()
-        row_layout_gpu.addWidget(QLabel(self.gan_parameters[8][0]))
-        self.param_gpu_checkbox = QCheckBox()
-        self.param_gpu_checkbox.setChecked(bool(self.gan_parameters[8][2]))
-        row_layout_gpu.addWidget(self.param_gpu_checkbox)
-        self.param_gan_layout.addLayout(row_layout_gpu)
-
         row_layout_cpu = QHBoxLayout()
         row_layout_cpu.addWidget(QLabel(self.gan_parameters[9][0]))
         self.param_cpu_spinbox = QSpinBox()
@@ -441,14 +458,6 @@ class MainApplication(QMainWindow):
         self.param_cpu_spinbox.setValue(int(self.gan_parameters[9][2]))
         row_layout_cpu.addWidget(self.param_cpu_spinbox)
         self.param_gan_layout.addLayout(row_layout_cpu)
-
-        row_layout_threshold = QHBoxLayout()
-        row_layout_threshold.addWidget(QLabel(str("Swap threshold")))
-        self.param_threshold_spinbox = QDoubleSpinBox()
-        self.param_threshold_spinbox.setRange(0.0, 100000000.0)
-        self.param_threshold_spinbox.setValue(float(_Swap.threshold))
-        row_layout_threshold.addWidget(self.param_threshold_spinbox)
-        self.param_gan_layout.addLayout(row_layout_threshold)
 
         self.param_floating_square_layout.addLayout(self.param_gan_layout)
         self.param_layout.addWidget(self.param_floating_square)
@@ -579,7 +588,8 @@ class MainApplication(QMainWindow):
         self.param_json.clicked.connect(self.set_json_dir)
         self.param_kdir.clicked.connect(self.set_keras_dir)
         self.param_outdir.clicked.connect(self.set_gan_dir)
-        self.param_save.clicked.connect(self.set_gan_data)
+        self.param_train.clicked.connect(self.set_gan_train)
+        self.param_save.clicked.connect(self.set_gan_data)        
         self.param_gan.clicked.connect(_CNN.train)
 
         #////////////////////////////////////////////////////////////////////////////////
@@ -596,11 +606,12 @@ class MainApplication(QMainWindow):
         self.analyze_gnuplot_gan_ur_button.clicked.connect(lambda : self.analyse_gnuplot(option=0, model=str("GAN")))
 
         self.analyze_plot_swap_rc_button.clicked.connect(lambda : self.analyse_plot(fight_option=1, model_option=1, option=2))
-        self.analyze_plot_swap_uc_button.clicked.connect(lambda : self.analyse_plot(fight_option=3, model_option=1, option=2))
-        self.analyze_plot_swap_ur_button.clicked.connect(lambda : self.analyse_plot(fight_option=2, model_option=1, option=2))
+        self.analyze_plot_swap_uc_button.clicked.connect(lambda : self.analyse_plot(fight_option=2, model_option=1, option=2))
+        self.analyze_plot_swap_ur_button.clicked.connect(lambda : self.analyse_plot(fight_option=3, model_option=1, option=2))
+
         self.analyze_plot_gan_rc_button.clicked.connect(lambda : self.analyse_plot(fight_option=1, model_option=2, option=2))
-        self.analyze_plot_gan_uc_button.clicked.connect(lambda : self.analyse_plot(fight_option=3, model_option=2, option=2))
-        self.analyze_plot_gan_ur_button.clicked.connect(lambda : self.analyse_plot(fight_option=2, model_option=2, option=2))
+        self.analyze_plot_gan_uc_button.clicked.connect(lambda : self.analyse_plot(fight_option=2, model_option=2, option=2))
+        self.analyze_plot_gan_ur_button.clicked.connect(lambda : self.analyse_plot(fight_option=3, model_option=2, option=2))
 
         #////////////////////////////////////////////////////////////////////////////////
 
@@ -703,6 +714,13 @@ class MainApplication(QMainWindow):
         s = file_dialog.getExistingDirectory(None, "Sélectionnez un dossier de destination")
         self.gan_output_directory = str(s)
         _CNN.set_tensor_dir(str(s))
+        self.gan_text_label.setText(str(s))
+
+    def set_gan_train(self):
+        file_dialog = QFileDialog()
+        s = file_dialog.getExistingDirectory(None, "Sélectionnez un dossier de destination \n Be sure your directory is set as : \n -test \n -train \n with each contains directory : \-n A[male] \n -B[female]")
+        self.gan_train_directory = str(s)
+        _CNN.set_root(str(s))
         self.gan_text_label.setText(str(s))
 
     def get_gpu(self):
@@ -998,8 +1016,24 @@ class MainApplication(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
+
+    #Partie logo
+    #########################################################
+    pixmap = QPixmap("./madona.jpg") #ajouter un vrai logo
+    splash = QSplashScreen(pixmap)
+    splash.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+    splash.show()
+    timer = QTimer()
+    timer.singleShot(2000, splash.close)
+    #########################################################
+
     window = MainApplication()
-    window.show()
+    #Partie logo
+    ########################################
+    QTimer.singleShot(2000, window.show)
+    ########################################
+    #window.show()
+
     sys.exit(app.exec())
 
 if __name__ == "__main__":

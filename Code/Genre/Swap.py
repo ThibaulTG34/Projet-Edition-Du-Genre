@@ -225,6 +225,7 @@ class Swap:
         return chi2
 
     def swap(self):
+        if self.body is None: return
         if self.face is None:
             image_extensions = [".jpg", ".jpeg", ".png"]
             predictor = dlib.shape_predictor("./shape/shape_predictor_81_face_landmarks.dat")
