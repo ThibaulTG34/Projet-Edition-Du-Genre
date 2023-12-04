@@ -191,6 +191,7 @@ class Analyse:
         #print(f'Female F1 Score: {f_f1}')
         #print(f'Exactitude: {accuracy}')
 
+        gan_epochs = info["gan_epochs"]
         gan_decay = info["gan_decay"]
         gan_learning = info["gan_learning_rate"]
         gan_batch = info["gan_batch_size"]
@@ -203,7 +204,7 @@ class Analyse:
 
         if gnuplot is True:
             with open(output_file_path, 'a') as file:
-                file.write(f'model | {m_model} | player | {player} | adversaire | {adversaire} | m_true | {len(vp_list)} | f_true | {len(vn_list)} | m_false | {len(fp_list)} | f_false | {len(fn_list)} | male_precision | {m_precision} | male_recall | {m_recall} | male_f1 | {m_f1} | female_precision | {f_precision} | female_recall | {f_recall} | female_f1 | {f_f1} | accuracy | {accuracy} | gan_decay | {gan_decay} | gan_learning | {gan_learning} | gan_batch | {gan_batch} | gan_size | {gan_size}\n')
+                file.write(f'model | {m_model} | player | {player} | adversaire | {adversaire} | m_true | {len(vp_list)} | f_true | {len(vn_list)} | m_false | {len(fp_list)} | f_false | {len(fn_list)} | male_precision | {m_precision} | male_recall | {m_recall} | male_f1 | {m_f1} | female_precision | {f_precision} | female_recall | {f_recall} | female_f1 | {f_f1} | accuracy | {accuracy} | gan_decay | {gan_decay} | gan_learning | {gan_learning} | gan_batch | {gan_batch} | gan_size | {gan_size} | gan_epochs | {gan_epochs}\n')
             print(f'Données ajoutées dans {output_file_path}')
 
     def plot_results(self, file_path, fight_option = 1, model_option = 1, option = 1, proj = False):
@@ -373,11 +374,32 @@ class Analyse:
             return
 
 _Analyse = Analyse()
-#_Analyse.metrique("./analyze.json", 1, True, "Swap", str("./metrics_data_1.dat"))
-#_Analyse.metrique("./analyze.json", 2, True, "Swap", str("./metrics_data_2.dat"))
-#_Analyse.metrique("./analyze.json", 3, True, "Swap", str("./metrics_data_3.dat"))
+macro_oui_3d = True
+macro_non_3d = False
+macro_swap = 1
+macro_gan = 2
+macro_confusion = 1
+macro_stats = 2
+macro_real_machine = 1
+macro_real_user = 2
+macro_user_machine = 3
 
-#_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 1, False)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 1, True)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 2, False)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 2, True)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_confusion, macro_non_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_confusion, macro_oui_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_stats, macro_non_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_stats, macro_oui_3d)
+
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_confusion, macro_non_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_confusion, macro_oui_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_stats, macro_non_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_stats, macro_oui_3d)
+
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_confusion, macro_non_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_confusion, macro_oui_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_stats, macro_non_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_stats, macro_oui_3d)
+
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_gan, macro_confusion, macro_non_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_gan, macro_confusion, macro_oui_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_gan, macro_stats, macro_non_3d)
+#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_gan, macro_stats, macro_oui_3d)
