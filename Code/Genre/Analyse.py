@@ -6,8 +6,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
-from google.auth import exceptions
-from google.oauth2.service_account import Credentials
 from classificateur import *
 
 class Analyse:
@@ -293,9 +291,9 @@ _Analyse = Analyse()
 
 #_Analyse.plot_results(str("./metrics_data_1.dat"), 1, 2, 1)
 #_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 1)
-_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1,False)
-_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1,True)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), 1, 1, 2)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 2)
-_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2,False)
-_Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2,True)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1,False)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1,True)
+# #_Analyse.plot_results(str("./metrics_data_1.dat"), 1, 1, 2)
+# #_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 2)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2,False)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2,True)

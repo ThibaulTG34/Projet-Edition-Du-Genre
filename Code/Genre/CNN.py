@@ -39,7 +39,9 @@ from tensorboardX import SummaryWriter
 class CNN:
     def __init__(self):
         super().__init__()
-        self.root = str("./data")
+        pwd = os.path.dirname(__file__)
+
+        self.root = str(pwd+"/data")
         self.start_epochs = 0
         self.nepochs = 1
         self.decay_epochs = 0
@@ -50,10 +52,11 @@ class CNN:
         self.outchannel = 3
         self.cpu = 12
         self.gpu = True
+        # pwd = os.path.dirname(__file__)
 
-        self.keras_dir = str("./keras")
-        self.tensor_dir = str("./tensor")
-        self.last_save_eochs = str("./keras")
+        self.keras_dir = str(pwd+"/keras")
+        self.tensor_dir = str(pwd+"/tensor")
+        self.last_save_eochs = str(pwd+"/keras")
 
         self.mode = 0
         self.source = None
@@ -209,11 +212,11 @@ class CNN:
         netD_A = Discriminator(self.inchannel)
         netD_B = Discriminator(self.outchannel)
 
-        if self.gpu is True:
-            netG_A2B.cuda()
-            netG_B2A.cuda()
-            netD_A.cuda()
-            netD_B.cuda()
+        # if self.gpu is True:
+        #     netG_A2B.cuda()
+        #     netG_B2A.cuda()
+        #     netD_A.cuda()
+        #     netD_B.cuda()
 
         netG_A2B.apply(weights_init_normal)
         netG_B2A.apply(weights_init_normal)

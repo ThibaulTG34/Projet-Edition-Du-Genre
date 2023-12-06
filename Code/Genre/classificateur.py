@@ -15,12 +15,14 @@ def classified(path):
 
         image = cv2.resize(image, (720, 640))
         fr_cv = image.copy()
+        
+        pwd = os.path.dirname(__file__)
 
         # Importing Models and set mean values 
-        face1 = "./classifieurs/opencv_face_detector.pbtxt"
-        face2 = "./classifieurs/opencv_face_detector_uint8.pb"
-        gen1 = "./classifieurs/gender_deploy.prototxt"
-        gen2 = "./classifieurs/gender_net.caffemodel"
+        face1 = pwd+"/classifieurs/opencv_face_detector.pbtxt"
+        face2 = pwd+"/classifieurs/opencv_face_detector_uint8.pb"
+        gen1 = pwd+"/classifieurs/gender_deploy.prototxt"
+        gen2 = pwd+"/classifieurs/gender_net.caffemodel"
         MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)  
 
         # Using models 

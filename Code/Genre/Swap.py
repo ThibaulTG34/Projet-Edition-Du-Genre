@@ -62,7 +62,7 @@ class Swap:
         self.height, self.width, self.channels = self.body.shape
         self.detector = dlib.get_frontal_face_detector()
         pwd = os.path.dirname(__file__)
-        self.predictor = dlib.shape_predictor("./shape/shape_predictor_81_face_landmarks.dat")
+        self.predictor = dlib.shape_predictor(pwd+"/shape/shape_predictor_81_face_landmarks.dat")
 
     def get_landmarks(self, landmarks, landmarks_points):
         for n in range(68):
@@ -206,7 +206,8 @@ class Swap:
     def swap(self):
         if self.face is None:
             image_extensions = [".jpg", ".jpeg", ".png"]
-            predictor = dlib.shape_predictor("./shape/shape_predictor_81_face_landmarks.dat")
+            pwd = os.path.dirname(__file__)
+            predictor = dlib.shape_predictor(pwd+"/shape/shape_predictor_81_face_landmarks.dat")
             detector = dlib.get_frontal_face_detector()
             min_distance = float('inf')
             closest_face = None
