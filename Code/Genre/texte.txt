@@ -1,8 +1,10 @@
 L'onglet "Help" , celui-ci donc , logique hein ?
+------------------------------------------------
     Fournit des informations utiles sur l'utilisation de chaque fonctionnalité de l'interface.
     Consultez ce guide pour obtenir des conseils sur la navigation et l'utilisation efficace de l'application.
 
 Onglet "Swap"
+------------------------------------------------
     L'onglet "Swap" vous permet d'effectuer des opérations de transformation d'images entre deux fichiers sources.
         Vous pouvez charger une image source dans chaque espace réservé,
                      -définir la fréquence d'images par seconde (FPS)
@@ -13,7 +15,7 @@ Onglet "Swap"
         Vous pouvez également générer des fichiers vidéo MP4 ou GIF à partir des images transformées.
 
 Onglet "Morph"
-
+------------------------------------------------
     L'onglet "Morph" est dédié aux opérations de morphing sur les images.
         Chargez une image source, définissez la fréquence d'images par seconde (FPS) et le nombre de trames.
         Utilisez les boutons pour ouvrir, enregistrer et effectuer des opérations spécifiques telles que :
@@ -22,7 +24,7 @@ Onglet "Morph"
         Vous pouvez également générer des fichiers vidéo MP4 ou GIF à partir des images morphées.
 
 Onglet "Param"
-
+------------------------------------------------
     L'onglet "Param" vous permet de configurer les paramètres:
       -Directory:
          -"Set Male directory" vos images d'hommes ( Swap et Gan )
@@ -53,7 +55,7 @@ Onglet "Param"
                   -B --> Female
 
 Onglet "Analyze"
-
+------------------------------------------------
     L'onglet "Analyze" vous permet d'analyser des images.
     Vous pouvez choisir entre les options "Homme" et "Femme", et passer à l'image suivante.
     Les images à analyser seront affichées dans la zone dédiée.

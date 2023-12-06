@@ -71,7 +71,7 @@ class CNN:
     def to_dict(self):
         attributes = vars(self)
         result_dict = {key: str(value) for key, value in attributes.items()}
-        #print(result_dict)
+        print(result_dict)
         return result_dict
 
     def set_root(self, val):
@@ -416,6 +416,7 @@ class CNN:
         ###################################
 
     def morphing(self, option = 1):
+        if self.source is None : return
         self.size = int(self.size)
         self.inchannel = int(self.inchannel)
         self.outchannel = int(self.outchannel)
