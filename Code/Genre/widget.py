@@ -889,9 +889,9 @@ class MainApplication(QMainWindow):
         else: file_name, _ = QFileDialog.getOpenFileName(self, "Open Image File", "", "Image Files (*.png *.jpg *.jpeg *.bmp);;All Files (*)")
         if file_name:
             print("Open file " + file_name + "\n")
-            image = cv2.imread(str(file_name))
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            image = cv2.imread(str(file_name))            
             if image is not None:
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 if option == 1:
                     placeholder = self.morph_placeholder
                     _CNN.set_source(str(file_name))
