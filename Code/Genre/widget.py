@@ -56,6 +56,40 @@ class OptionsDialog(QDialog):
         button_ok.clicked.connect(self.accept)
         layout.addWidget(button_ok)
 
+class OptionsDialog2(QDialog):
+    def __init__(self, parent=None, _blur=0.0, _brisque=0.0):
+        super(OptionsDialog, self).__init__(parent)
+        self.setWindowTitle("Image Quality")
+
+        ecran_pc = QGuiApplication.primaryScreen().availableGeometry()
+        self.x = ecran_pc.width() / 6
+        self.y = ecran_pc.height() / 4
+        self.z = ecran_pc.width() / 4
+        self.t = ecran_pc.height() / 4
+
+        self.setGeometry(int(self.x), int(self.y), int(self.z), int(self.t))
+        self.setMinimumSize(int(self.x/2), int(self.y/2))
+        self.setMaximumSize(int(self.z/2), int(self.t/2))
+
+        self.blur_label = QLabel("Blur Score: N/A", self)
+        self.brisque_label = QLabel("BRISQUE Score: N/A", self)
+
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.blur_label)
+        layout.addWidget(self.brisque_label)
+
+        hbox_layout = QHBoxLayout()
+        hbox_layout.addWidget(self.blur_label)
+        self.text_label = QLabel(str(_blur))
+        hbox_layout.addWidget(self.text_label)
+        layout.addLayout(hbox_layout)
+
+        hbox_layout = QHBoxLayout()
+        hbox_layout.addWidget(self.brisque_label)
+        self.text_label = QLabel(str(_brisque))
+        hbox_layout.addWidget(self.text_label)
+        layout.addLayout(hbox_layout)
+
 class MainApplication(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -320,7 +354,7 @@ class MainApplication(QMainWindow):
         self.param_mdir = QPushButton("Set Female Img directory -> ")
         self.param_fdir = QPushButton("Set Male Img directory -> ")
         self.param_adir = QPushButton("Set Analyze directory -> ")
-        self.param_json = QPushButton("Set JSON directory -> ")
+        self.param_json = QPushButton("Set Json output file -> ")
         self.param_kdir = QPushButton("Set Keras directory -> ")
         self.param_outdir = QPushButton("Set tensor logs directory -> ")
         self.param_train = QPushButton("Set Training set directory -> ")
@@ -488,6 +522,8 @@ class MainApplication(QMainWindow):
         self.analyze_plot_gan_uc_button = QPushButton("Plot Gan_Real_User", self.analyze_tab)
         self.analyze_plot_gan_ur_button = QPushButton("Plot Gan_User_Class", self.analyze_tab)
 
+        self.analyse_brisque_button = QPushButton("BRISQUE Analyse", self.analyze_tab)
+
         self.analyze_placeholder = QLabel(self.analyze_tab)
         self.analyze_placeholder.setAutoFillBackground(True)
         self.analyze_pal = self.analyze_placeholder.palette()
@@ -501,6 +537,7 @@ class MainApplication(QMainWindow):
         buttons_layout_haut = QHBoxLayout()
         buttons_layout_bas = QHBoxLayout()
         buttons_layout_footer = QHBoxLayout()
+        buttons_layout_bottom = QHBoxLayout()
 
         buttons_layout_haut.addWidget(self.analyze_homme_button)
         buttons_layout_haut.addWidget(self.analyze_prec_button)
@@ -521,9 +558,12 @@ class MainApplication(QMainWindow):
         buttons_layout_footer.addWidget(self.analyze_plot_gan_ur_button)
         buttons_layout_footer.addWidget(self.analyze_plot_gan_uc_button)
 
+        buttons_layout_bottom.addWidget(self.analyse_brisque_button)
+
         buttons_layout.addLayout(buttons_layout_haut)
         buttons_layout.addLayout(buttons_layout_bas)
         buttons_layout.addLayout(buttons_layout_footer)
+        buttons_layout.addLayout(buttons_layout_bottom)
 
         button_width = int(self.analyze_tab.width() * 3)
         self.analyze_homme_button.setFixedSize(button_width, self.analyze_homme_button.height())
@@ -545,6 +585,8 @@ class MainApplication(QMainWindow):
         self.analyze_plot_gan_ur_button.setFixedSize(int(button_width/2), self.analyze_plot_gan_ur_button.height())
         self.analyze_plot_gan_rc_button.setFixedSize(int(button_width/2), self.analyze_plot_gan_rc_button.height())
         self.analyze_plot_gan_uc_button.setFixedSize(int(button_width/2), self.analyze_plot_gan_uc_button.height())
+
+        self.analyse_brisque_button.setFixedSize(int(button_width * 4), self.analyse_brisque_button.height())
 
         self.analyze_layout = QVBoxLayout(self.analyze_tab)
         self.analyze_layout.addLayout(placeholders_layout)
@@ -612,6 +654,8 @@ class MainApplication(QMainWindow):
         self.analyze_plot_gan_rc_button.clicked.connect(lambda : self.analyse_plot(fight_option=1, model_option=2, option=2))
         self.analyze_plot_gan_uc_button.clicked.connect(lambda : self.analyse_plot(fight_option=2, model_option=2, option=2))
         self.analyze_plot_gan_ur_button.clicked.connect(lambda : self.analyse_plot(fight_option=3, model_option=2, option=2))
+
+        self.analyse_brisque_button.clicked.connect(self.analyse_brisque)
 
         #////////////////////////////////////////////////////////////////////////////////
 
@@ -832,6 +876,13 @@ class MainApplication(QMainWindow):
         file_name = self.image_files[self.current_image_index]
         real_form = ("Male" if option==1 else "Female")
         _Analyse.update_or_create_entry(str(file_name), None, str(real_form), None, None, 1)
+
+    def analyse_brisque(self):
+        s, _ = QFileDialog.getSaveFileName(self, "Image file", "", "Image Files (*.png *.jpg *.jpeg *.bmp);;All Files (*)")
+        blur, brisque = _Analyse.calculate_scores(str(s))
+        dialog = OptionsDialog2(_blur=float(blur), _brisque=float(brisque[0]))
+        dialog.exec()
+
 
     def open_image(self, option=1, name=None):
         if name is not None: file_name = name
