@@ -563,7 +563,7 @@ class MainApplication(QMainWindow):
         buttons_layout.addLayout(buttons_layout_haut)
         buttons_layout.addLayout(buttons_layout_bas)
         buttons_layout.addLayout(buttons_layout_footer)
-        buttons_layout.addLayout(buttons_layout_bottom)
+        #buttons_layout.addLayout(buttons_layout_bottom)
 
         button_width = int(self.analyze_tab.width() * 3)
         self.analyze_homme_button.setFixedSize(button_width, self.analyze_homme_button.height())
