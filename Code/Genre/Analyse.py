@@ -38,14 +38,14 @@ class Analyse:
         self.path_file = os.path.join(self.directory, self.json_file)
 
     def calculate_scores(self, image_path):
-        img = cv.imread(image_path)
+        img = cv2.imread(image_path)
         if img is None:
             print(f"Impossible de lire l'image à partir du chemin : {image_path}")
             return
 
-        grey = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-        blurScore = cv.Laplacian(grey, cv.CV_64F).var()
-        score = cv.quality.QualityBRISQUE_compute(img, "./classifieurs/brisque_model_live.yml", "./classifieurs/brisque_range_live.yml")
+        grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        blurScore = cv2.Laplacian(grey, cv2.CV_64F).var()
+        score = cv2.quality.QualityBRISQUE_compute(img, "./classifieurs/brisque_model_live.yml", "./classifieurs/brisque_range_live.yml")
 
         #print(f' >> Blur Score: {blurScore}')
         #print(f' >> BRISQUE Score: {score}')
@@ -318,7 +318,7 @@ class Analyse:
                 explode = [0] * 4
                 explode[max_index] = 0.1
                 plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, explode=explode)
-                plt.title('Confusion Matrix')
+                plt.title('Camembert de confusion')
                 plt.show()
         elif option == 2:
             if (len(m_precision_list) <= 0) or (len(m_recall_list) <= 0) or (len(m_f1_list) <= 0) or (len(f_precision_list) <= 0) or (len(f_recall_list) <= 0) or (len(f_f1_list) <= 0) or (len(accuracy_list) <= 0): return
@@ -398,30 +398,34 @@ macro_real_machine = 1
 macro_real_user = 2
 macro_user_machine = 3
 
-#_Analyse.plot_results(str("./metrics_data_1.dat"), 1, 2, 1)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 1)
+pwd = os.path.dirname(__file__)
+
+# _Analyse.plot_results(str("./metrics_data_1.dat"), 1, 2, 1)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 1)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1,False)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1,True)
-# #_Analyse.plot_results(str("./metrics_data_1.dat"), 1, 1, 2)
-# #_Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 2)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), 1, 1, 2)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 2)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2,False)
+
+
 # _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2,True)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_confusion, macro_non_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_confusion, macro_oui_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_stats, macro_non_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_stats, macro_oui_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_confusion, macro_non_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_confusion, macro_oui_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_stats, macro_non_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_stats, macro_oui_3d)
 
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_confusion, macro_non_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_confusion, macro_oui_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_stats, macro_non_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_stats, macro_oui_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_confusion, macro_non_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_confusion, macro_oui_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_stats, macro_non_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_stats, macro_oui_3d)
 
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_confusion, macro_non_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_confusion, macro_oui_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_stats, macro_non_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_stats, macro_oui_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_confusion, macro_non_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_confusion, macro_oui_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_stats, macro_non_3d)
+# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_stats, macro_oui_3d)
 
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_gan, macro_confusion, macro_non_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_gan, macro_confusion, macro_oui_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_gan, macro_stats, macro_non_3d)
-#_Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_gan, macro_stats, macro_oui_3d)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), macro_real_machine, macro_gan, macro_confusion, macro_non_3d)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), macro_real_machine, macro_gan, macro_confusion, macro_oui_3d)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), macro_real_machine, macro_gan, macro_stats, macro_non_3d)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), macro_real_machine, macro_gan, macro_stats, macro_oui_3d)

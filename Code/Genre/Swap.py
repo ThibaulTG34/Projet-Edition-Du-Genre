@@ -24,7 +24,9 @@ class Swap:
         self.face_name = None
         self.body = None
         self.body_name = None
-        self.directory = str("./")
+        pwd = os.path.dirname(__file__)
+        
+        self.directory = str(pwd+"/")
 
         self.w = chi2_weight + euclidiean_weight +  pearson_weight + bhattacharyya_weight
         self.fps = 15 # + vite - vite -> lecture [temps video]
@@ -75,9 +77,10 @@ class Swap:
         image2 = cv2.resize(image2, (image1.shape[1], image1.shape[0]))
 
         difference = cv2.absdiff(image1, image2)
-        difference_gray = cv2.cvtColor(difference, cv2.COLOR_BGR2GRAY)
+        difference_gray = cv2.cvtColor(difference, cv2.COLOR_BGR2GRAY)        
         normalized_difference = cv2.normalize(difference_gray, None, 0, 255, cv2.NORM_MINMAX)
         mean_difference = np.mean(normalized_difference)
+        # cv2.imwrite("diff.png", mean_difference)
         self.diff = float(mean_difference)
 
         #_ , thresholded_difference = cv2.threshold(normalized_difference, self.threshold, 255, cv2.THRESH_BINARY)
@@ -260,7 +263,8 @@ class Swap:
                             #Geometrie
                             euclidean_distance = float(np.linalg.norm(body_landmarks.flatten() - landmarks.flatten()))
                             #Forme
-                            shape_correlation = float(pearsonr(body_landmarks.flatten(), landmarks.flatten()).statistic)
+                            shape_correlation, p_value = (pearsonr(body_landmarks.flatten(), landmarks.flatten()))
+                            shape_correlation = float(shape_correlation)
                             #Texture
                             hist1 = cv2.calcHist([self.body], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
                             hist2 = cv2.calcHist([image], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
@@ -281,6 +285,7 @@ class Swap:
             self.finded_face = str(_name)
             self.face = closest_face
             print("Auto Selection face : " + self.finded_face)
+            # self.face = cv2.cvtColor(self.face, cv2.COLOR_GRAY2RGB)
 
         self.prepare_variables()
         self.init_landmark()
@@ -293,12 +298,6 @@ class Swap:
         self.smoothing()
         self.face = None
     
-    # def FindTargetFromDATA():
-    #     min_distance = float('inf')
-    #     closest_face = None
-    #     _name = str(" ")
-        
-    #     for file in os.listdir("D:/Training/female"):
 
 
     def set_directory(self, s):

@@ -1,0 +1,68 @@
+{
+  "fab2fanny.png": {
+    "real": "Female",
+    "classificateur": "Female",
+    "user": "Unknow",
+    "model": "Swap",
+    "gan_epochs": "Unknow",
+    "gan_decay": "Unknow",
+    "gan_learning_rate": "Unknow",
+    "gan_batch_size": "Unknow",
+    "gan_size": "Unknow"
+  },
+  "fab.png": {
+    "real": "Female",
+    "classificateur": "Male",
+    "user": "Unknow",
+    "model": "Swap",
+    "gan_epochs": "Unknow",
+    "gan_decay": "Unknow",
+    "gan_learning_rate": "Unknow",
+    "gan_batch_size": "Unknow",
+    "gan_size": "Unknow"
+  },
+  "swap_fab_marie.png": {
+    "real": "Female",
+    "classificateur": "Female",
+    "user": "Unknow",
+    "model": "Swap",
+    "gan_epochs": "Unknow",
+    "gan_decay": "Unknow",
+    "gan_learning_rate": "Unknow",
+    "gan_batch_size": "Unknow",
+    "gan_size": "Unknow"
+  },
+  "alex_marie.png": {
+    "real": "Male",
+    "classificateur": "Male",
+    "user": "Unknow",
+    "model": "Swap",
+    "gan_epochs": "Unknow",
+    "gan_decay": "Unknow",
+    "gan_learning_rate": "Unknow",
+    "gan_batch_size": "Unknow",
+    "gan_size": "Unknow"
+  },
+  "marie_alex.png": {
+    "real": "Female",
+    "classificateur": "Male",
+    "user": "Unknow",
+    "model": "Swap",
+    "gan_epochs": "Unknow",
+    "gan_decay": "Unknow",
+    "gan_learning_rate": "Unknow",
+    "gan_batch_size": "Unknow",
+    "gan_size": "Unknow"
+  },
+  "ingo_marie.png": {
+    "real": "Female",
+    "classificateur": "Male",
+    "user": "Unknow",
+    "model": "Swap",
+    "gan_epochs": "Unknow",
+    "gan_decay": "Unknow",
+    "gan_learning_rate": "Unknow",
+    "gan_batch_size": "Unknow",
+    "gan_size": "Unknow"
+  }
+}

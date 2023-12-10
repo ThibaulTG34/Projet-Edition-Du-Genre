@@ -43,7 +43,7 @@ class OptionsDialog(QDialog):
         self.setMinimumSize(int(self.x/2), int(self.y/2))
         self.setMaximumSize(int(self.z/2), int(self.t/2))
 
-        self.checkbox_confusion = QCheckBox("Confusion Matrix", self)
+        self.checkbox_confusion = QCheckBox("Camembert de confusion", self)
         self.checkbox_score = QCheckBox("Score Plot", self)
         self.checkbox_waouh = QCheckBox("+Dimension", self)
 
@@ -1067,10 +1067,10 @@ class MainApplication(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-
+    pwd = os.path.dirname(__file__)
     #Partie logo
     #########################################################
-    pixmap = QPixmap("./madona.jpg") #ajouter un vrai logo
+    pixmap = QPixmap(pwd+"/logo.png") #ajouter un vrai logo
     splash = QSplashScreen(pixmap)
     splash.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
     splash.show()
