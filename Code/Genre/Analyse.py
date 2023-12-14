@@ -400,27 +400,27 @@ macro_user_machine = 3
 
 pwd = os.path.dirname(__file__)
 
-# _Analyse.plot_results(str("./metrics_data_1.dat"), 1, 2, 1)
-# _Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 1)
-# _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1,False)
-# _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 1,True)
-# _Analyse.plot_results(str("./metrics_data_1.dat"), 1, 1, 2)
-# _Analyse.plot_results(str("./metrics_data_1.dat"), 2, 1, 2)
-# _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2,False)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), 1, 2, 1)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), 2, 1, 1)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), 3, 1, 1,False)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), 3, 1, 1,True)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), 1, 1, 2)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), 2, 1, 2)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), 3, 1, 2,False)
 
 
 # _Analyse.plot_results(str("./metrics_data_1.dat"), 3, 1, 2,True)
-# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_confusion, macro_non_3d)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), macro_real_user, macro_swap, macro_confusion, macro_non_3d)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_confusion, macro_oui_3d)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_stats, macro_non_3d)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_swap, macro_stats, macro_oui_3d)
 
-# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_confusion, macro_non_3d)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), macro_real_machine, macro_swap, macro_confusion, macro_non_3d)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_confusion, macro_oui_3d)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_stats, macro_non_3d)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_machine, macro_swap, macro_stats, macro_oui_3d)
 
-# _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_confusion, macro_non_3d)
+# _Analyse.plot_results(str(pwd+"/metrics_data_1.dat"), macro_real_user, macro_gan, macro_confusion, macro_non_3d)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_confusion, macro_oui_3d)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_stats, macro_non_3d)
 # _Analyse.plot_results(str("./metrics_data_1.dat"), macro_real_user, macro_gan, macro_stats, macro_oui_3d)

@@ -64,5 +64,16 @@
     "gan_learning_rate": "Unknow",
     "gan_batch_size": "Unknow",
     "gan_size": "Unknow"
+  },
+  "swap_rate.png": {
+    "real": "Female",
+    "classificateur": "Male",
+    "user": "Unknow",
+    "model": "Swap",
+    "gan_epochs": "Unknow",
+    "gan_decay": "Unknow",
+    "gan_learning_rate": "Unknow",
+    "gan_batch_size": "Unknow",
+    "gan_size": "Unknow"
   }
 }
